@@ -1,0 +1,66 @@
+[
+  {
+    "id": "",
+    "label": "火車種類",
+    "value": "TRAIN_KIND",
+    "labelTw": "火車種類",
+    "labelCn": "火車種類",
+    "labelUs": "Train Kind"
+  },
+  {
+    "id": "",
+    "label": "車站配置",
+    "value": "STOP_KIND",
+    "labelTw": "車站配置",
+    "labelCn": "車站配置",
+    "labelUs": "Stop Kind"
+  },
+  {
+    "id": "",
+    "label": "功能",
+    "value": "FUNCTION",
+    "labelTw": "功能",
+    "labelCn": "功能",
+    "labelUs": "Function"
+  },
+  {
+    "id": "",
+    "label": "群組",
+    "value": "GROUP",
+    "labelTw": "群組",
+    "labelCn": "群组",
+    "labelUs": "Group"
+  },
+  {
+    "id": "",
+    "label": "功能動作類別",
+    "value": "ACTION_TYPE",
+    "labelTw": "動作類別",
+    "labelCn": "动作类别",
+    "labelUs": "Action Type"
+  },
+  {
+    "id": "",
+    "label": "語系",
+    "value": "LANGUAGE",
+    "labelTw": "語系",
+    "labelCn": "语系",
+    "labelUs": "Language"
+  },
+  {
+    "id": "",
+    "label": "配置",
+    "value": "CONFIGURATION",
+    "labelTw": "配置",
+    "labelCn": "配置",
+    "labelUs": "Configuration"
+  },
+  {
+    "id": "",
+    "label": "YES_NO",
+    "value": "YES_NO",
+    "labelTw": "YES_NO",
+    "labelCn": "YES_NO",
+    "labelUs": "YES_NO"
+  }
+]

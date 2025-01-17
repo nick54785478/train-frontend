@@ -1,0 +1,49 @@
+[
+  {
+    "id": "",
+    "label": "首頁",
+    "icon": "",
+    "routerLink": "/",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "註冊",
+    "icon": "",
+    "url": "/register",
+    "routerLink": "/register",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "火車",
+    "icon": "",
+    "url": "/train",
+    "routerLink": "/train",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "新增火車資訊",
+    "icon": "",
+    "url": "/train/create",
+    "routerLink": "/train/create",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "火車停靠資訊",
+    "icon": "",
+    "url": "/train/stops",
+    "routerLink": "/train/stops",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "設定",
+    "icon": "",
+    "url": "/setting",
+    "routerLink": "/setting",
+    "visible": true
+  }
+]
