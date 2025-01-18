@@ -16,7 +16,7 @@
   },
   {
     "id": "",
-    "label": "火車",
+    "label": "查詢車次資訊",
     "icon": "",
     "url": "/train",
     "routerLink": "/train",

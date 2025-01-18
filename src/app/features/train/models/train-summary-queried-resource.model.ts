@@ -1,4 +1,4 @@
-export class TrainQueriedResource {
+export class TrainSummaryQueriedResource {
   /**
    * 火車 uuid
    */
@@ -23,10 +23,10 @@ export class TrainQueriedResource {
   /**
    * 停靠站
    */
-  stops: StopQueriedResource[] = [];
+  stops: StopSummaryQueriedResource[] = [];
 }
 
-export class StopQueriedResource {
+export class StopSummaryQueriedResource {
   /**
    * 停靠順序
    */

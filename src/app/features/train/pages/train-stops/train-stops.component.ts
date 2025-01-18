@@ -8,6 +8,11 @@ import { CoreModule } from '../../../../core/core.module';
 import { OptionService } from '../../../../shared/services/option.service';
 import { DataType } from '../../../../core/enums/data-type.enum';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
+import { BaseFormCompoent } from '../../../../shared/component/base/base-form.component';
+import { BaseTableCompoent } from '../../../../shared/component/base/base-table.component';
+import { TrainService } from '../../services/train.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { finalize } from 'rxjs/internal/operators/finalize';
 
 @Component({
   selector: 'app-train-stops',
@@ -17,54 +22,71 @@ import { SystemMessageService } from '../../../../core/services/system-message.s
   templateUrl: './train-stops.component.html',
   styleUrl: './train-stops.component.scss',
 })
-export class TrainStopsComponent
-  extends BaseInlineEditeTableCompoent
-  implements OnInit
-{
+export class TrainStopsComponent extends BaseTableCompoent implements OnInit {
   trainNoList: Option[] = []; // Active Flag 的下拉式選單
   stops: Option[] = []; // 車站資料的下拉式選單
   kinds: Option[] = []; // 車種資料的下拉式選單
 
   constructor(
-    private optionService: OptionService,
+    public ref: DynamicDialogRef,
+    private trainService: TrainService,
+    private dialogConfig: DynamicDialogConfig,
     private messageService: SystemMessageService
   ) {
     super();
   }
 
   ngOnInit(): void {
-    // 初始化表單
-    this.formGroup = new FormGroup({
-      trainNo: new FormControl(''), // 車次
-      trainKind: new FormControl(''), // 車種
-      fromStop: new FormControl(''), // 起站
-      toStop: new FormControl(''), // 起站
-      takeDate: new FormControl(''), // 搭乘日期
-      takeTime: new FormControl(''), // 搭乘時間
-    });
-
-    this.optionService.getSettingTypes(DataType.STOP_KIND).subscribe({
-      next: (res) => {
-        this.stops = res;
+    const uuid = this.dialogConfig.data.uuid;
+    const fromStop = this.dialogConfig.data.fromStop;
+    console.log('uuid:', uuid, ', fromStop:', fromStop);
+    this.cols = [
+      {
+        field: 'seq',
+        header: '停靠順序',
+        type: '',
       },
-      error: (err) => {
-        this.messageService.error(err);
+      {
+        field: 'fromStop',
+        header: '起站',
+        type: '',
       },
-    });
-
-    //	 取得火車種類的下拉式選單資料
-    this.optionService.getTrainKinds().subscribe({
-      next: (res) => {
-        this.kinds = res;
+      {
+        field: 'arriveStartStopTime',
+        header: '起站發車時間',
+        type: '',
       },
-      error: (error) => {
-        this.messageService.error(
-          '取得火車種類的下拉式選單資料時，發生錯誤',
-          error.message
-        );
+      {
+        field: 'toStop',
+        header: '迄站',
+        type: '',
       },
-    });
+      {
+        field: 'arriveEndStopTime',
+        header: '迄站抵達時間',
+        type: '',
+      },
+      {
+        field: 'price',
+        header: '票價',
+        type: '',
+      },
+    ];
+    this.query(uuid, fromStop);
   }
 
-  query() {}
+  /**
+   * 查詢車站詳細資料
+   * @param uuid
+   * @param fromStop
+   */
+  query(uuid: string, fromStop: string) {
+    this.trainService
+      .queryStopDetails(uuid, fromStop)
+      .pipe(finalize(() => {}))
+      .subscribe((res) => {
+        console.log(res);
+        this.tableData = res;
+      });
+  }
 }

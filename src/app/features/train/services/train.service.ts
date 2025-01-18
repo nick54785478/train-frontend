@@ -5,7 +5,8 @@ import { BaseResponse } from '../../../shared/models/base-response.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TrainCreatedResource } from '../models/train-created-resource.model ';
-import { TrainQueriedResource } from '../models/train-queried-resource.model';
+import { TrainSummaryQueriedResource } from '../models/train-summary-queried-resource.model';
+import { StopDetailQueriedResource } from '../models/stop-detail-queried-resource.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +43,7 @@ export class TrainService {
     toStop?: string,
     takeDate?: string,
     time?: string
-  ): Observable<TrainQueriedResource[]> {
+  ): Observable<TrainSummaryQueriedResource[]> {
     const url = this.baseApiUrl + '/train';
 
     let params = new HttpParams()
@@ -53,6 +54,21 @@ export class TrainService {
       .set('takeDate', takeDate ? takeDate : '')
       .set('time', time ? time : '');
 
-    return this.http.get<TrainQueriedResource[]>(url, { params });
+    return this.http.get<TrainSummaryQueriedResource[]>(url, { params });
+  }
+
+  /**
+   * 查詢車站詳細資料
+   * @param uuid
+   * @param fromStop
+   * @returns
+   */
+  queryStopDetails(
+    uuid: string,
+    fromStop: string
+  ): Observable<StopDetailQueriedResource[]> {
+    const url = this.baseApiUrl + '/train/stops/details';
+    let params = new HttpParams().set('uuid', uuid).set('fromStop', fromStop);
+    return this.http.get<StopDetailQueriedResource[]>(url, { params });
   }
 }

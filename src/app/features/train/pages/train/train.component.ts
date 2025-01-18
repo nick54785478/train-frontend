@@ -16,6 +16,11 @@ import { BaseHeaderLineTableCompoent } from '../../../../shared/component/base/b
 import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogFormComponent } from '../../../../shared/component/dialog-form/dialog-form.component';
+import { TrainDetailComponent } from './train-detail/train-detail.component';
+import { FormAction } from '../../../../core/enums/form-action.enum';
+import { TrainDialogType } from '../../../../core/enums/train-dialog-type.enum';
+import { DialogConfig } from '../../../../shared/models/dialog-config.model';
+import { TrainStopsComponent } from '../train-stops/train-stops.component';
 
 @Component({
   selector: 'app-train',
@@ -33,12 +38,10 @@ export class TrainComponent
   stops: Option[] = []; // 車站資料的下拉式選單
   kinds: Option[] = []; // 車種資料的下拉式選單
   protected override lineTableVisibled: boolean = false;
-
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
 
   //Table Row Actions 選單。
   rowActionMenu: MenuItem[] = [];
-  rowCurrentData: any;
 
   constructor(
     private optionService: OptionService,
@@ -79,7 +82,7 @@ export class TrainComponent
       },
       {
         field: 'fromStopTime',
-        header: '起站到站時間',
+        header: '起站發車時間',
         type: '',
       },
       {
@@ -187,13 +190,27 @@ export class TrainComponent
    * Table Action 按鈕按下去的時候要把該筆資料記錄下來。
    * @param rowData 點選的資料
    */
-  clickRowActionMenu(rowData: any): void {
+  clickHeaderRowActionMenu(dialogType: string, rowData: any): void {
+    // console.log('clickRowActionMenu rowData = ' + JSON.stringify(rowData));
+    this.rowCurrentData = rowData;
+    this.selectedHeaderData = rowData;
+    console.log(this.rowCurrentData);
+
+    // 開啟 Dialog
+    this.openDialog(dialogType, this.rowCurrentData);
+  }
+
+  /**
+   * Table Action 按鈕按下去的時候要把該筆資料記錄下來。
+   * @param rowData 點選的資料
+   */
+  clickLineRowActionMenu(dialogType: string, rowData: any): void {
     // console.log('clickRowActionMenu rowData = ' + JSON.stringify(rowData));
     this.rowCurrentData = rowData;
     console.log(this.rowCurrentData);
 
     // 開啟 Dialog
-    // this.openFormDialog(FormAction.EDIT, this.rowCurrentData);
+    this.openDialog(dialogType, this.rowCurrentData);
   }
 
   /**
@@ -216,33 +233,57 @@ export class TrainComponent
     this.lineTableVisibled = false;
   }
 
-  // /**
-  //  * 開啟 Dialog 表單
-  //  * @returns DynamicDialogRef
-  //  */
-  // openFormDialog(data?: number): DynamicDialogRef {
-  //   this.dialogOpened = true;
+  /**
+   * 開啟 Dialog 表單
+   * @returns DynamicDialogRef
+   */
+  openDialog(dialogType: string, rowData?: any): DynamicDialogRef {
+    this.dialogOpened = true;
 
-  //   console.log(data);
+    console.log(rowData);
 
-  //   const ref = this.dialogService.open(DialogFormComponent, {
-  //     header: '角色功能配置',
-  //     width: '60%',
-  //     contentStyle: { overflow: 'auto' },
-  //     baseZIndex: 10000,
-  //     maximizable: true,
-  //     data: data,
-  //     templates: {
-  //       content: FunctionsConfigComponent,
-  //     },
-  //   });
-  //   // Dialog 關閉後要做的事情
-  //   ref?.onClose
-  //     .pipe(takeUntil(this._destroying$))
-  //     .subscribe((returnData: any) => {
-  //       console.log('關閉 Dialog');
-  //       this.dialogOpened = false;
-  //     });
-  //   return ref;
-  // }
+    let config: DialogConfig;
+    // 根據 DialogType 設置值
+    if (dialogType === TrainDialogType.TRAIN_DETAIL) {
+      config = {
+        component: TrainDetailComponent,
+        dataAction: 'TRAIN_DETAIL',
+        header: '車次詳細資料',
+        data: {
+          rowData: rowData,
+          lineCols: this.lineCols,
+        },
+      };
+    } else {
+      config = {
+        component: TrainStopsComponent,
+        dataAction: 'STOP_DETAIL',
+        header: '停靠站詳細資料',
+        data: {
+          uuid: this.selectedHeaderData.uuid,
+          fromStop: rowData.stopName,
+        },
+      };
+    }
+
+    const ref = this.dialogService.open(DialogFormComponent, {
+      header: config.header,
+      width: '80%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true,
+      data: config.data,
+      templates: {
+        content: config.component,
+      },
+    });
+    // Dialog 關閉後要做的事情
+    ref?.onClose
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((returnData: any) => {
+        console.log('關閉 Dialog');
+        this.dialogOpened = false;
+      });
+    return ref;
+  }
 }

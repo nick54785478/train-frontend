@@ -48,7 +48,17 @@ export abstract class BaseHeaderLineTableCompoent {
    * 選中的那列資料 (亦可使用 tableData[selectedIndex] 來取得)
    * 此處設置的目的為將來維運方便
    * */
-  protected selectedData: any;
+  protected rowCurrentData: any;
+
+  /**
+   * 選中的 Header Row 資料
+   * */
+  protected selectedHeaderData: any;
+
+  /**
+   * 選中的 Line Row 資料
+   * */
+  protected selectedLineData: any;
 
   /**
    * 選中的 rowIndex

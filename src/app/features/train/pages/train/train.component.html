@@ -105,7 +105,7 @@
     [resizableColumns]="true"
     [value]="headerTableData"
     [columns]="headerCols"
-    [(selection)]="selectedData"
+    [(selection)]="selectedHeaderData"
     [scrollable]="true"
     scrollDirection="both"
     scrollHeight="200px"
@@ -156,16 +156,11 @@
               type="button"
               class="p-button-outlined p-button-secondary"
               style="color: rgb(1, 155, 70)"
-              icon="pi pi-pencil"
-              (click)="clickRowActionMenu(rowData); menu.toggle($event)"
-            ></button>
-            <button
-              pButton
-              type="button"
-              class="p-button-outlined p-button-secondary"
-              icon="pi pi-trash"
-              style="color: red"
-              (click)="delete(rowData.id); menu.toggle($event)"
+              icon="pi pi-eye"
+              (click)="
+                clickHeaderRowActionMenu('TRAIN_DETAIL', rowData);
+                menu.toggle($event)
+              "
             ></button>
           </div>
         </td>
@@ -184,7 +179,7 @@
     [resizableColumns]="true"
     [value]="lineTableData"
     [columns]="lineCols"
-    [(selection)]="selectedData"
+    [(selection)]="selectedLineData"
     [scrollable]="true"
     scrollDirection="both"
     scrollHeight="300px"
@@ -234,16 +229,11 @@
               type="button"
               class="p-button-outlined p-button-secondary"
               style="color: rgb(1, 155, 70)"
-              icon="pi pi-pencil"
-              (click)="clickRowActionMenu(rowData); menu.toggle($event)"
-            ></button>
-            <button
-              pButton
-              type="button"
-              class="p-button-outlined p-button-secondary"
-              icon="pi pi-trash"
-              style="color: red"
-              (click)="delete(rowData.id); menu.toggle($event)"
+              icon="pi pi-book"
+              (click)="
+                clickLineRowActionMenu('STOP_DETAIL', rowData);
+                menu.toggle($event)
+              "
             ></button>
           </div>
         </td>
