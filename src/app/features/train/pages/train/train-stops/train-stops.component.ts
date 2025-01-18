@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseInlineEditeTableCompoent } from '../../../../shared/component/base/base-inline-edit-table.component';
-import { Option } from '../../../../shared/models/option.model';
+import { BaseInlineEditeTableCompoent } from '../../../../../shared/component/base/base-inline-edit-table.component';
+import { Option } from '../../../../../shared/models/option.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
-import { CoreModule } from '../../../../core/core.module';
-import { OptionService } from '../../../../shared/services/option.service';
-import { DataType } from '../../../../core/enums/data-type.enum';
-import { SystemMessageService } from '../../../../core/services/system-message.service';
-import { BaseFormCompoent } from '../../../../shared/component/base/base-form.component';
-import { BaseTableCompoent } from '../../../../shared/component/base/base-table.component';
-import { TrainService } from '../../services/train.service';
+import { SharedModule } from '../../../../../shared/shared.module';
+import { CoreModule } from '../../../../../core/core.module';
+import { OptionService } from '../../../../../shared/services/option.service';
+import { DataType } from '../../../../../core/enums/data-type.enum';
+import { SystemMessageService } from '../../../../../core/services/system-message.service';
+import { BaseFormCompoent } from '../../../../../shared/component/base/base-form.component';
+import { BaseTableCompoent } from '../../../../../shared/component/base/base-table.component';
+import { TrainService } from '../../../services/train.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { finalize } from 'rxjs/internal/operators/finalize';
 

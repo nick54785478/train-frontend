@@ -20,7 +20,7 @@ import { TrainDetailComponent } from './train-detail/train-detail.component';
 import { FormAction } from '../../../../core/enums/form-action.enum';
 import { TrainDialogType } from '../../../../core/enums/train-dialog-type.enum';
 import { DialogConfig } from '../../../../shared/models/dialog-config.model';
-import { TrainStopsComponent } from '../train-stops/train-stops.component';
+import { TrainStopsComponent } from './train-stops/train-stops.component';
 
 @Component({
   selector: 'app-train',
