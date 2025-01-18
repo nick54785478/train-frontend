@@ -62,6 +62,24 @@ export class CreateTimetableComponent
         disabled: this.tableData.length === 0,
       },
     ];
+    this.detailTabs = [
+      {
+        label: '提交',
+        icon: 'pi pi-save',
+        command: () => {
+          this.onSubmit();
+        },
+        disabled: this.tableData.length === 0 || this.mode !== '',
+      },
+      {
+        label: '清除',
+        icon: 'pi pi-times',
+        command: () => {
+          this.clear();
+        },
+        disabled: false,
+      },
+    ];
   }
 
   ngOnInit(): void {
@@ -89,7 +107,7 @@ export class CreateTimetableComponent
         command: () => {
           this.onSubmit();
         },
-        disabled: false,
+        disabled: this.tableData.length === 0 || this.mode !== '',
       },
       {
         label: '清除',
@@ -175,7 +193,12 @@ export class CreateTimetableComponent
     console.log(requestData);
 
     this.submitted = true;
-    if (!this.submitted || this.formGroup.invalid) {
+    if (
+      !this.submitted ||
+      this.formGroup.invalid ||
+      this.tableData.length === 0 ||
+      this.mode !== ''
+    ) {
       return;
     }
 
