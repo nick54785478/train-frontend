@@ -162,7 +162,7 @@ export abstract class BaseInlineEditeTableCompoent {
   }
 
   /**
-   * 檢查 Column 資料欄位(必填)是否為空
+   * 檢查 Column 資料欄位
    * @param selectedData
    * @returns true/false
    */
