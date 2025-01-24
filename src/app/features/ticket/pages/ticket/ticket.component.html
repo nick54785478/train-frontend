@@ -1,0 +1,51 @@
+<!-- <p>Hello Welcome</p> -->
+<p-panel header="火車訂票流程">
+  <div class="card" #contentElement>
+    <div class="grid p-fluid flex justify-content-center">
+      <p-stepper
+        [(activeStep)]="activeStepIndex"
+        (activeStepChange)="onStepChange($event)"
+      >
+        <p-stepperPanel header="查詢車次資料">
+          <!-- <ng-template
+            pTemplate="content"
+            let-nextCallback="nextCallback"
+            let-index="index"
+          >
+          </ng-template> -->
+        </p-stepperPanel>
+        <p-stepperPanel header="火車車次訂票">
+          <!-- <ng-template
+            pTemplate="content"
+            let-prevCallback="prevCallback"
+            let-nextCallback="nextCallback"
+            let-index="index"
+          >
+          
+          </ng-template> -->
+        </p-stepperPanel>
+        <p-stepperPanel header="個人角色權限">
+          <!-- <ng-template
+            pTemplate="content"
+            let-prevCallback="prevCallback"
+            let-nextCallback="nextCallback"
+            let-index="index"
+          >
+          </ng-template> -->
+        </p-stepperPanel>
+        <p-stepperPanel header="權限合併">
+          <!-- <ng-template
+            pTemplate="content"
+            let-prevCallback="prevCallback"
+            let-index="index"
+          >
+           
+          </ng-template> -->
+        </p-stepperPanel>
+      </p-stepper>
+      <!-- </div> -->
+    </div>
+  </div>
+</p-panel>
+
+<router-outlet></router-outlet>

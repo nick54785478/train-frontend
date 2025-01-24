@@ -22,10 +22,17 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./register/register.module').then((m) => m.RegisterModule),
   },
+  // 車次頁面
   {
     path: 'train',
     loadChildren: () =>
       import('./train/train.module').then((m) => m.TrainModule),
+  },
+  // 車次頁面
+  {
+    path: 'ticket',
+    loadChildren: () =>
+      import('./ticket/ticket.module').then((m) => m.TicketModule),
   },
   {
     path: 'setting',

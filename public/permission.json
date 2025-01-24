@@ -40,6 +40,14 @@
   },
   {
     "id": "",
+    "label": "訂票頁面",
+    "icon": "",
+    "url": "/ticket",
+    "routerLink": "/ticket",
+    "visible": true
+  },
+  {
+    "id": "",
     "label": "設定",
     "icon": "",
     "url": "/setting",

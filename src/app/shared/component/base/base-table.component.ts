@@ -35,4 +35,12 @@ export abstract class BaseTableCompoent {
    * 是否開啟 Dialog
    */
   protected dialogOpened: boolean = false;
+
+  /**
+   * 紀錄該筆資料
+   * @param rowData 點選的資料
+   */
+  clickRowActionMenu(rowData: any): void {
+    this.selectedData = rowData;
+  }
 }
