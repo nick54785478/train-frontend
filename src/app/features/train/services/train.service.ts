@@ -44,7 +44,7 @@ export class TrainService {
     takeDate?: string,
     time?: string
   ): Observable<TrainSummaryQueriedResource[]> {
-    const url = this.baseApiUrl + '/train';
+    const url = this.baseApiUrl + '/train/summary';
 
     let params = new HttpParams()
       .set('trainNo', trainNo ? trainNo : '')

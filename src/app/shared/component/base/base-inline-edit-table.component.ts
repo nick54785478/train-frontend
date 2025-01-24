@@ -8,7 +8,7 @@ import { BaseTableRow } from '../../models/base-table-row.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 /**
- * 定義基礎的 Form 表單 Component
+ * 定義基礎的 Inline editible 表格 Component
  */
 @Component({
   selector: 'app-base-inline-edit-form-compoent',

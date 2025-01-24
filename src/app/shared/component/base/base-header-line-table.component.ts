@@ -4,7 +4,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Option } from '../../models/option.model';
 
 /**
- * 定義基礎的 Form 表單 Component
+ * 定義基礎的 Header & Line 雙表格 Component
  */
 @Component({
   selector: 'app-base-header-line-form-compoent',

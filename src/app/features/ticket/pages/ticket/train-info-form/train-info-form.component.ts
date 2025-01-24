@@ -49,8 +49,8 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
     this.formGroup = new FormGroup({
       trainNo: new FormControl(''), // 車次
       trainKind: new FormControl(''), // 車種
-      fromStop: new FormControl(''), // 起站
-      toStop: new FormControl(''), // 起站
+      fromStop: new FormControl('', [Validators.required]), // 起站
+      toStop: new FormControl('', [Validators.required]), // 起站
       takeDate: new FormControl('', [Validators.required]), // 搭乘日期
       takeTime: new FormControl('', [Validators.required]), // 搭乘時間
     });

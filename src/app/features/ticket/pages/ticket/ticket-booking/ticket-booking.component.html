@@ -21,7 +21,7 @@
         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
           {{ col.header }} <p-sortIcon [field]="col.field" />
         </th>
-        <th
+        <!-- <th
           alignFrozen="right"
           pFrozenColumn
           style="
@@ -31,7 +31,7 @@
           "
         >
           Actions
-        </th>
+        </th> -->
       </tr>
     </ng-template>
     <!-- 內容 -->
@@ -45,9 +45,102 @@
             {{ rowData[col.field] }}
           </ng-container>
         </td>
-        <td alignFrozen="right" pFrozenColumn style="text-align: center"></td>
+        <td alignFrozen="right" pFrozenColumn style="text-align: center">
+          <p-checkbox
+            [binary]="true"
+            [ngModel]="isChecked(rowData)"
+            (onChange)="clickRowActionMenu(rowData)"
+          ></p-checkbox>
+        </td>
       </tr>
-      <!-- <button type="button" (click)="show('test')" pButton icon="pi pi-info-circle" label="Show"></button> -->
     </ng-template>
   </p-table>
+</div>
+<div *ngIf="detailVisible">
+  <form [formGroup]="formGroup">
+    <p-panel header="明細">
+      <div class="card" #contentElement>
+        <div class="grid p-fluid">
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>車次</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="trainNo"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>車種</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="trainKind"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-12 md:col-3 lg:col-3">
+            <label class="required">座位</label>
+            <input type="text" pInputText formControlName="seatNo" />
+            <div *ngIf="formControlInvalid('seatNo')">
+              <small class="p-error"> 座位不能為空 </small>
+            </div>
+          </div>
+        </div>
+        <div class="grid p-fluid">
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>搭乘日期</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="takeDate"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>發車時間</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="fromStopTime"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>起站</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="fromStop"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-12 md:col-3 lg:col-3">
+            <label>迄站</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="toStop"
+              [readOnly]="true"
+            />
+          </div>
+        </div>
+        <div class="flex mb-2 gap-2 justify-content-end">
+          <button
+            type="button"
+            pButton
+            label="送出"
+            (click)="submit()"
+          ></button>
+          <button
+            type="button"
+            class="p-button-secondary p-button-outlined"
+            pButton
+            label="取消"
+            (click)="cancel()"
+          ></button>
+        </div>
+      </div>
+    </p-panel>
+  </form>
 </div>

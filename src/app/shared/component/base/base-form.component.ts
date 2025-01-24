@@ -14,12 +14,20 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
   template: '',
 })
 export abstract class BaseFormCompoent {
-  // 定義 Form Group
+  /**
+   * 定義 Form Group
+   * */
   protected formGroup!: FormGroup;
 
-  protected submitted: boolean = false; // 用於 Submit 用
+  /**
+   * 用於 Submit 用
+   */
+  protected submitted: boolean = false;
 
-  protected formAction!: string; // 表單動作
+  /**
+   * 表單動作
+   */
+  protected formAction!: string;
 
   constructor() {}
 

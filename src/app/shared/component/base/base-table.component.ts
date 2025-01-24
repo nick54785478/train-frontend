@@ -4,7 +4,7 @@ import { SystemMessageService } from '../../../core/services/system-message.serv
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 /**
- * 定義基礎的 Form 表單 Component
+ * 定義基礎的 Table 表格 Component
  */
 @Component({
   selector: 'app-base-form-compoent',

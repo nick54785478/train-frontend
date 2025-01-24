@@ -6,7 +6,7 @@ export class TrainInfoQueriedResource {
   /**
    * 車次
    */
-  number!: number;
+  trainNo!: number;
   /**
    * 車種
    */
@@ -19,6 +19,8 @@ export class TrainInfoQueriedResource {
   fromStopTime!: string;
 
   toStopTime!: string;
+
+  price!: string;
 
   /**
    * 停靠站

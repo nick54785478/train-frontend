@@ -45,14 +45,14 @@
           </div>
         </div>
         <div class="col-12 md:col-3 lg:col-3">
-          <label class="required">搭乘日期</label>
+          <label class="required">搭乘時間</label>
           <input type="time" pInputText formControlName="takeTime" />
           <div *ngIf="formControlInvalid('takeTime')">
             <small class="p-error"> 不能為空 </small>
           </div>
         </div>
         <div class="col-12 md:col-3 lg:col-3">
-          <label>起站</label>
+          <label class="required">起站</label>
           <p-dropdown
             [options]="stops"
             optionValue="value"
@@ -62,9 +62,12 @@
             formControlName="fromStop"
           >
           </p-dropdown>
+          <div *ngIf="formControlInvalid('fromStop')">
+            <small class="p-error"> 不能為空 </small>
+          </div>
         </div>
         <div class="col-12 md:col-3 lg:col-3">
-          <label>迄站</label>
+          <label class="required">迄站</label>
           <p-dropdown
             [options]="stops"
             optionValue="value"
@@ -74,6 +77,9 @@
             formControlName="toStop"
           >
           </p-dropdown>
+          <div *ngIf="formControlInvalid('toStop')">
+            <small class="p-error"> 不能為空 </small>
+          </div>
         </div>
       </div>
       &nbsp;

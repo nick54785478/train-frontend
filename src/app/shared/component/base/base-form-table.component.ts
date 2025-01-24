@@ -4,26 +4,46 @@ import { SystemMessageService } from '../../../core/services/system-message.serv
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 /**
- * 定義基礎的 PickList 表單 Component
+ * 定義基礎的 Form 表單及 Table 表格 Component
  */
 @Component({
-  selector: 'app-base-pickList-compoent',
+  selector: 'app-base-table-form-compoent',
   standalone: true,
   imports: [],
   providers: [],
   template: '',
 })
-export abstract class BasePickListCompoent {
-  // 定義 Form Group
+export abstract class BaseFormTableCompoent {
+  /**
+   * 定義 Form Group
+   * */
   protected formGroup!: FormGroup;
 
   protected submitted: boolean = false; // 用於 Submit 用
+  /**
+   * 表單動作
+   * */
+  protected formAction!: string;
 
-  protected formAction!: string; // 表單動作
+  /**
+   * 動態定義表格欄位參數
+   */
+  cols: any[] = [];
 
-  sourceList: any[] = []; // 可選資料清單
-  targetList: any[] = []; // 選擇後資料清單
-  detailTabs: any[] = []; // PickList 上方 Tab 按鈕選單
+  /**
+   * 表格資料
+   */
+  tableData: any;
+
+  /**
+   * 選擇的 row data
+   */
+  selectedData: any;
+
+  /**
+   * 是否開啟 Dialog
+   */
+  protected dialogOpened: boolean = false;
 
   constructor() {}
 
@@ -57,39 +77,10 @@ export abstract class BasePickListCompoent {
   }
 
   /**
-   * 從 Source 移動至 Target
-   * @param event
+   * 紀錄該筆資料
+   * @param rowData 點選的資料
    */
-  protected onMoveToTarget(event: any) {
-    // 避免可能存在未定義或空對象。
-    // Typescript 會靠北
-    if (!event || !event.item) {
-      return;
-    }
-    // 濾掉該筆資料
-    this.sourceList = this.sourceList.filter(
-      (item) => item.id !== event?.item.id
-    );
-    this.targetList.push(event.item);
-    console.log(event);
-  }
-
-  /**
-   * 從 Target 移動至 Source
-   * @param event
-   */
-  protected onMoveToSource(event: any) {
-    console.log(event);
-
-    // 避免可能存在未定義或空對象。
-    // Typescript 會靠北
-    if (!event || !event.item) {
-      return;
-    }
-    // 濾掉該筆資料
-    this.targetList = this.targetList.filter(
-      (item) => item.id !== event.item?.id
-    );
-    this.sourceList.push(event.item);
+  clickRowActionMenu(rowData: any): void {
+    this.selectedData = rowData;
   }
 }
