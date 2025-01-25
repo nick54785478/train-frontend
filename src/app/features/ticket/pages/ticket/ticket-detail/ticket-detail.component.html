@@ -1,0 +1,73 @@
+<form [formGroup]="formGroup">
+  <p-panel header="車次資料">
+    <div class="card" #contentElement>
+      <div class="grid p-fluid">
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>車次</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="trainNo"
+            [readOnly]="true"
+          />
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>車種</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="trainKind"
+            [readOnly]="true"
+          />
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>票價</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="price"
+            [readOnly]="true"
+          />
+        </div>
+      </div>
+      <div class="grid p-fluid">
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>搭乘日期</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="takeDate"
+            [readOnly]="true"
+          />
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>發車時間</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="fromStopTime"
+            [readOnly]="true"
+          />
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>起站</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="fromStop"
+            [readOnly]="true"
+          />
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>迄站</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="toStop"
+            [readOnly]="true"
+          />
+        </div>
+      </div>
+    </div>
+  </p-panel>
+</form>

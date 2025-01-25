@@ -4,6 +4,10 @@ export class TrainInfoQueriedResource {
    */
   uuid?: string;
   /**
+   * 車票 uuid
+   */
+  ticketUuid?: string;
+  /**
    * 車次
    */
   trainNo!: number;

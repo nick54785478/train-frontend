@@ -3,6 +3,7 @@
   <div class="card" #contentElement>
     <div class="grid p-fluid flex justify-content-center">
       <p-stepper
+        [linear]="true"
         [(activeStep)]="activeStepIndex"
         (activeStepChange)="onStepChange($event)"
       >
@@ -14,7 +15,7 @@
           >
           </ng-template> -->
         </p-stepperPanel>
-        <p-stepperPanel header="火車車次訂票">
+        <p-stepperPanel header="車次選擇">
           <!-- <ng-template
             pTemplate="content"
             let-prevCallback="prevCallback"
@@ -24,7 +25,7 @@
           
           </ng-template> -->
         </p-stepperPanel>
-        <p-stepperPanel header="個人角色權限">
+        <p-stepperPanel header="座位選擇">
           <!-- <ng-template
             pTemplate="content"
             let-prevCallback="prevCallback"
@@ -33,7 +34,7 @@
           >
           </ng-template> -->
         </p-stepperPanel>
-        <p-stepperPanel header="權限合併">
+        <p-stepperPanel header="訂票成功">
           <!-- <ng-template
             pTemplate="content"
             let-prevCallback="prevCallback"

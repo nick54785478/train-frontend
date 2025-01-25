@@ -62,5 +62,13 @@
     "labelTw": "YES_NO",
     "labelCn": "YES_NO",
     "labelUs": "YES_NO"
+  },
+  {
+    "id": "",
+    "label": "座位清單",
+    "value": "SEAT_NO_LIST",
+    "labelTw": "座位清單",
+    "labelCn": "座位清单",
+    "labelUs": "Seat List"
   }
 ]

@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../../../../core/core.module';
@@ -7,23 +13,25 @@ import { BaseTableCompoent } from '../../../../../shared/component/base/base-tab
 import { TrainTicketService } from '../../../services/train-ticket.service';
 import { SystemMessageService } from '../../../../../core/services/system-message.service';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigateService } from '../../../../../core/services/navigate.service';
 import { StorageService } from '../../../../../core/services/storage.service';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { StepQueryKey } from '../../../../../core/enums/step-query-key.enum copy';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseFormTableCompoent } from '../../../../../shared/component/base/base-form-table.component';
+import { BookTicketResource } from '../../../models/book-ticket-resource.model';
+import { TrainInfoSelectedResource } from '../../../models/train-info-selected-resource.model';
 
 @Component({
   selector: 'app-ticket-booking',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
   providers: [DialogService, TrainTicketService, NavigateService],
-  templateUrl: './ticket-booking.component.html',
-  styleUrl: './ticket-booking.component.scss',
+  templateUrl: './train-selecting.component.html',
+  styleUrl: './train-selecting.component.scss',
 })
-export class TicketBookingComponent
+export class TrainSelectingComponent
   extends BaseFormTableCompoent
   implements OnInit, OnDestroy
 {
@@ -34,11 +42,14 @@ export class TicketBookingComponent
 
   rowSelected: boolean = false;
 
+  ticketInfo!: TrainInfoSelectedResource; // 確認訂票資訊
+
   constructor(
     private route: ActivatedRoute,
     private trainTicketService: TrainTicketService,
     private messageService: SystemMessageService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private router: Router
   ) {
     super();
   }
@@ -52,7 +63,7 @@ export class TicketBookingComponent
       toStop: new FormControl(''), // 起站
       takeDate: new FormControl(''), // 搭乘日期
       fromStopTime: new FormControl(''), // 發車時間
-      seatNo: new FormControl('', [Validators.required]), // 座位編號
+      price: new FormControl(''), // 票價
     });
 
     this.cols = [
@@ -84,6 +95,11 @@ export class TicketBookingComponent
       {
         field: 'toStopTime',
         header: '迄站抵達時間',
+        type: '',
+      },
+      {
+        field: 'price',
+        header: '票價',
         type: '',
       },
     ];
@@ -118,11 +134,23 @@ export class TicketBookingComponent
    * 提交訂單
    */
   submit() {
-    this.submitted = true;
-    if (this.submitted || this.formGroup.invalid) {
-      return;
-    }
-    // 執行後續動作
+    this.ticketInfo = {
+      trainUuid: this.selectedData.uuid,
+      ticketUuid: this.selectedData.ticketUuid,
+      trainNo: this.selectedData.trainNo,
+      price: this.selectedData.price,
+      takeDate: this.selectedData.takeDate,
+      fromStop: this.selectedData.fromStop,
+      toStop: this.selectedData.toStop,
+      fromStopTime: this.selectedData.fromStopTime,
+      toStopTime: this.selectedData.toStopTime,
+      trainKind: this.selectedData.kind,
+    };
+    // 使用 State 在轉傳時攜帶資料轉傳
+    this.router.navigateByUrl('/ticket/ticket-detail', {
+      state: this.ticketInfo,
+    });
+    this.storageService.setSessionStorageItem('step', '' + 2);
   }
 
   // 紀錄該筆資料
@@ -145,9 +173,6 @@ export class TicketBookingComponent
 
   // Patch FormGroup 的值
   override patchFormGroupValue(data?: any): void {
-    console.log(data);
-    // this.formGroup.patchValue(data);
-    // this.formGroup.reset();
     this.formGroup.patchValue({
       trainNo: data.trainNo, // 角色名稱
       trainKind: data.kind, // 種類
@@ -155,6 +180,7 @@ export class TicketBookingComponent
       toStop: data.toStop, // 迄站
       takeDate: data.takeDate, // 搭乘日期
       fromStopTime: data.fromStopTime, // 搭乘時間
+      price: data.price, // 票價
     });
   }
 
@@ -179,5 +205,13 @@ export class TicketBookingComponent
     this.selectedData = null;
     this.rowSelected = false;
     this.detailVisible = false;
+  }
+
+  /**
+   * 取得此車次選擇的表單資料
+   * @returns
+   */
+  getSelectedTrainInfo(): BookTicketResource {
+    return this.ticketInfo;
   }
 }

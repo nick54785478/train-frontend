@@ -109,7 +109,7 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
     this.updateStopIndex();
 
     // 設置火車車次查詢資料
-    this.router.navigate(['/ticket/ticket-booking'], {
+    this.router.navigate(['/ticket/train-selecting'], {
       queryParams: {
         trainNo: formData.trainNo,
         trainKind: formData.trainKind,
