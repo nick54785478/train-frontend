@@ -1,5 +1,5 @@
 <form [formGroup]="formGroup">
-  <p-panel header="註冊使用者資料">
+  <p-panel header="註冊儲值帳戶">
     <div class="card" #contentElement>
       <div class="grid p-fluid">
         <div class="col-12 md:col-3 lg:col-3">
@@ -85,6 +85,22 @@
         <div class="col-12 md:col-7 lg:col-7">
           <label>地址</label>
           <input type="text" pInputText formControlName="address" />
+        </div>
+      </div>
+    </div>
+    <div class="grid p-fluid">
+      <div class="col-12 md:col-3 lg:col-3">
+        <label class="required">儲值</label>
+        <input
+          type="number"
+          pInputText
+          [min]="100"
+          [step]="100"
+          formControlName="money"
+          [ngClass]="{ 'ng-dirty': formControlInvalid('money') }"
+        />
+        <div *ngIf="formControlInvalid('money')">
+          <small class="p-error"> 請輸入儲值金額 (以100為單位) </small>
         </div>
       </div>
     </div>

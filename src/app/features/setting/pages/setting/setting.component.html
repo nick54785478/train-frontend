@@ -95,7 +95,13 @@
       <tr [pSelectableRow]="rowData">
         <td
           *ngFor="let col of columns"
-          [ngStyle]="{ 'word-break': 'break-all' }"
+          style="
+            white-space: pre-wrap;
+            word-break: break-all;
+            word-wrap: break-word;
+            max-width: 700px !important;
+            min-width: 150px !important;
+          "
         >
           <ng-container>
             {{ rowData[col.field] }}

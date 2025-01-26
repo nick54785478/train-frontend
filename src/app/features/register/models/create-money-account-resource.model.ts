@@ -1,4 +1,4 @@
-export class RegisterUser {
+export class CreateMoneyAccountResource {
   id!: number;
   name!: string;
   email!: string; // 信箱
@@ -7,4 +7,5 @@ export class RegisterUser {
   nationalId!: string; // 身分證字號
   birthday!: string;
   address!: string;
+  money!: number;
 }

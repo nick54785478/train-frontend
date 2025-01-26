@@ -93,7 +93,6 @@ export class SettingFormComponent
       if (!this.formGroup.valid || !this.submitted) {
         return;
       }
-      console.log('aaaa');
       // 透過 FormAction 判斷'新增'或'編輯'
       if (this.formAction === 'add') {
         this.onAddSetting();

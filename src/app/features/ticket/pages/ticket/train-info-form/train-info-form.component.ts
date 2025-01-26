@@ -18,6 +18,7 @@ import { finalize, lastValueFrom } from 'rxjs';
 import { NavigateService } from '../../../../../core/services/navigate.service';
 import { StorageService } from '../../../../../core/services/storage.service';
 import { Router } from '@angular/router';
+import { StepQueryKey } from '../../../../../core/enums/step-query-key.enum copy';
 
 @Component({
   selector: 'app-train-info-form',
@@ -45,6 +46,8 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.storageService.setSessionStorageItem('step', '' + 0);
+
     // 初始化表單
     this.formGroup = new FormGroup({
       trainNo: new FormControl(''), // 車次

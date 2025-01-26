@@ -5,7 +5,7 @@ import { BaseFormCompoent } from '../../../shared/component/base/base-form.compo
 import { CoreModule } from '../../../core/core.module';
 import { SystemMessageService } from '../../../core/services/system-message.service';
 import { environment } from '../../../../environments/environment';
-import { RegisterUser } from '../models/register-user-request.model';
+import { CreateMoneyAccountResource } from '../models/create-money-account-resource.model';
 import { finalize } from 'rxjs';
 import { LoadingMaskService } from '../../../core/services/loading-mask.service';
 import { RegisterService } from '../services/register.service';
@@ -14,7 +14,7 @@ import { RegisterService } from '../services/register.service';
   selector: 'app-register',
   standalone: true,
   imports: [SharedModule, CoreModule],
-  providers: [SystemMessageService],
+  providers: [LoadingMaskService, SystemMessageService],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -36,6 +36,7 @@ export class RegisterComponent extends BaseFormCompoent implements OnInit {
       birthday: new FormControl('', [Validators.required]),
       nationalId: new FormControl('', [Validators.required]),
       address: new FormControl(''),
+      money: new FormControl('', [Validators.required]),
     });
   }
 
@@ -51,7 +52,7 @@ export class RegisterComponent extends BaseFormCompoent implements OnInit {
       if (this.formGroup.valid) {
         this.loadMaskService.show();
         // 將表單資料設置進 CreateSetting
-        const request: RegisterUser = { ...this.formGroup.value };
+        const request: CreateMoneyAccountResource = { ...this.formGroup.value };
         this.registerService
           .create(request)
           .pipe(
@@ -62,11 +63,15 @@ export class RegisterComponent extends BaseFormCompoent implements OnInit {
           )
           .subscribe({
             next: (res) => {
-              if (res.code === 'VALIDATION_FAILED') {
-                this.systemMessageService.error(res?.message);
-                location.reload;
+              if (res.code === 'VALIDATION_FAILED' && res.message) {
+                this.systemMessageService.error(res.message);
               } else {
-                this.systemMessageService.success(res?.message);
+                this.systemMessageService.success(
+                  '成功新增一筆帳戶資料 ' +
+                    res.username +
+                    ' ，餘額:' +
+                    res.balance
+                );
               }
             },
             error: (error) => {

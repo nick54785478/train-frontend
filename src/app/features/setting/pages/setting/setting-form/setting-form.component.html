@@ -50,12 +50,7 @@
       </div>
       <div class="col-12 md:col-4 lg:col-4">
         <label>排序</label>
-        <p-inputNumber
-          formControlName="priorityNo"
-          [showButtons]="true"
-          [min]="0"
-          [max]="100"
-        />
+        <p-inputNumber formControlName="priorityNo" [min]="0" [max]="100" />
       </div>
       <div class="col-12 md:col-4 lg:col-4">
         <label>是否生效</label>
@@ -71,14 +66,6 @@
     </div>
     <div class="flex mb-2 gap-2 justify-content-end">
       <button type="button" pButton label="提交" (click)="onSubmit()"></button>
-      <button
-        type="button"
-        class="p-button-secondary p-button-outlined"
-        pButton
-        label="清除"
-        [disabled]="formAction === 'edit'"
-        (click)="clear()"
-      ></button>
       <button
         type="button"
         class="p-button-secondary p-button-outlined"

@@ -8,7 +8,7 @@
   },
   {
     "id": "",
-    "label": "註冊",
+    "label": "註冊儲值帳戶",
     "icon": "",
     "url": "/register",
     "routerLink": "/register",
