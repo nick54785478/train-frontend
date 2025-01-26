@@ -49,6 +49,27 @@
             [readOnly]="true"
           />
         </div>
+
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>車廂</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="carNo"
+            [readOnly]="true"
+          />
+        </div>
+
+        <div class="col-12 md:col-3 lg:col-3">
+          <label>座位</label>
+          <input
+            type="text"
+            pInputText
+            formControlName="seatNo"
+            [readOnly]="true"
+          />
+        </div>
+
         <div class="col-12 md:col-3 lg:col-3">
           <label>起站</label>
           <input
@@ -66,6 +87,25 @@
             formControlName="toStop"
             [readOnly]="true"
           />
+        </div>
+      </div>
+      <div class="grid p-fluid justify-content-end">
+        <div class="col-12 md:col-2 lg:col-2">
+          <button
+            type="button"
+            pButton
+            label="提交"
+            (click)="submit()"
+          ></button>
+        </div>
+        <div class="col-12 md:col-2 lg:col-2">
+          <button
+            type="button"
+            class="p-button-secondary p-button-outlined"
+            pButton
+            label="取消"
+            (click)="cancel()"
+          ></button>
         </div>
       </div>
     </div>
