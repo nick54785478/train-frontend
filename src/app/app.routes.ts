@@ -6,6 +6,7 @@ import { ErrorComponent } from './features/layout/error/error.component';
 import { LayoutComponent } from './features/layout/pages/layout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RegisterComponent } from './features/register/pages/register.component';
+import { FormInvalidComponent } from './features/layout/form-invalid/form-invalid.component';
 
 /**
  * 定義根路由配置的檔案
@@ -59,7 +60,11 @@ export const routes: Routes = [
     path: 'access-denied',
     component: AccessDeniedComponent,
   },
-
+  // Form Invalid
+  {
+    path: 'form-invalid',
+    component: FormInvalidComponent,
+  },
   // Error
   {
     path: 'error',

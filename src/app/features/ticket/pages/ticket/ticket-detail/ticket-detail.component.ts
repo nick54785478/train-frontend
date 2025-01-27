@@ -7,11 +7,13 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { TrainSeatService } from '../../../services/train-seat.service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { map } from 'rxjs/internal/operators/map';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
+  providers: [Router],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.scss',
 })
@@ -19,7 +21,10 @@ export class TicketDetailComponent
   extends BaseFormTableCompoent
   implements OnInit
 {
-  constructor(private trainSeatService: TrainSeatService) {
+  constructor(
+    private trainSeatService: TrainSeatService,
+    private router: Router
+  ) {
     super();
   }
   async ngOnInit(): Promise<void> {
@@ -37,8 +42,11 @@ export class TicketDetailComponent
       carNo: new FormControl(''), // 車廂編號
     });
 
+    if (!history) {
+      this.router.navigate(['/form-invalid']);
+    }
     // 從 state 中取得資料
-    const state = history ? history.state : null;
+    const state = history ? history.state : '';
 
     // 取得車票座位資訊
     const ticketInfo = await lastValueFrom(
