@@ -137,6 +137,7 @@ export class TrainSelectingComponent
       fromStopTime: this.selectedData.fromStopTime,
       toStopTime: this.selectedData.toStopTime,
       trainKind: this.selectedData.kind,
+      seatNo: '',
     };
     // 使用 State 在轉傳時攜帶資料轉傳
     this.router.navigateByUrl('/ticket/ticket-detail', {

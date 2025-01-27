@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { delay, Subject } from 'rxjs';
+import { TicketBookedResource } from '../models/ticket-booked-resource.model';
+import { BookTicketResource } from '../models/book-ticket-resource.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,5 +44,15 @@ export class TrainTicketService {
       .set('takeDate', takeDate ? takeDate : '')
       .set('time', time ? time : '');
     return this.http.get<TrainInfoQueriedResource[]>(url, { params });
+  }
+
+  /**
+   * 預訂車票
+   * @param request
+   * @returns
+   */
+  bookTicket(request: BookTicketResource): Observable<TicketBookedResource> {
+    const url = this.baseApiUrl + '/booking';
+    return this.http.post<TicketBookedResource>(url, request);
   }
 }

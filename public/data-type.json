@@ -70,5 +70,13 @@
     "labelTw": "座位清單",
     "labelCn": "座位清单",
     "labelUs": "Seat List"
+  },
+  {
+    "id": "",
+    "label": "車廂編號清單",
+    "value": "CAR_NO_LIST",
+    "labelTw": "車廂編號清單",
+    "labelCn": "車廂編號清單",
+    "labelUs": "CAR_NO_LIST"
   }
 ]

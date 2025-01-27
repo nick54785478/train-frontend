@@ -13,7 +13,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const storageService = inject(StorageService);
 
-  return next(req);
+  // return next(req);
   console.log('攔截請求' + req.url);
 
   // 如果是 refreshToken API，直接放行請求

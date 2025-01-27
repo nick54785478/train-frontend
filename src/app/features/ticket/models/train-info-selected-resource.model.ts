@@ -9,9 +9,9 @@ export class TrainInfoSelectedResource {
 
   price!: string; // 價格
 
-  seatNo?: string; // 座號
+  seatNo!: string; // 座號
 
-  takeDate?: string; // 乘車日期
+  takeDate!: string; // 乘車日期
 
   payByAccount?: string; // 付款方式是否透過 帳號扣款
 

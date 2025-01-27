@@ -8,12 +8,19 @@ import { TrainSeatService } from '../../../services/train-seat.service';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { map } from 'rxjs/internal/operators/map';
 import { Router } from '@angular/router';
+import { TrainTicketService } from '../../../services/train-ticket.service';
+import { BookTicketResource } from '../../../models/book-ticket-resource.model';
+import { finalize } from 'rxjs';
+import { LoadingMaskService } from '../../../../../core/services/loading-mask.service';
+import { error } from 'console';
+import { SystemMessageService } from '../../../../../core/services/system-message.service';
+import { TrainInfoSelectedResource } from '../../../models/train-info-selected-resource.model';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [Router],
+  providers: [Router, SystemMessageService, LoadingMaskService],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.scss',
 })
@@ -21,9 +28,13 @@ export class TicketDetailComponent
   extends BaseFormTableCompoent
   implements OnInit
 {
+  trainInfo!: TrainInfoSelectedResource;
   constructor(
+    private router: Router,
     private trainSeatService: TrainSeatService,
-    private router: Router
+    private trainTicketService: TrainTicketService,
+    private messageService: SystemMessageService,
+    private loadingMaskService: LoadingMaskService
   ) {
     super();
   }
@@ -42,39 +53,77 @@ export class TicketDetailComponent
       carNo: new FormControl(''), // 車廂編號
     });
 
-    if (!history) {
+    console.log(history);
+    if (history === undefined) {
       this.router.navigate(['/form-invalid']);
     }
     // 從 state 中取得資料
-    const state = history ? history.state : '';
+    this.trainInfo = history ? history.state : '';
+    console.log(this.trainInfo);
 
     // 取得車票座位資訊
     const ticketInfo = await lastValueFrom(
-      this.trainSeatService.getSeatInfo(state.trainUuid, state.takeDate).pipe(
-        map((res) => {
-          return res;
-        })
-      )
+      this.trainSeatService
+        .getSeatInfo(this.trainInfo.trainUuid, this.trainInfo.takeDate)
+        .pipe(
+          map((res) => {
+            return res;
+          })
+        )
     );
 
-    console.log(state);
-    if (state) {
+    if (this.trainInfo) {
       this.formGroup.patchValue({
-        trainNo: state.trainNo,
-        trainKind: state.trainKind,
-        fromStop: state.fromStop,
-        toStop: state.toStop,
-        fromStopTime: state.fromStopTime,
-        toStopTime: state.toStopTime,
-        takeDate: state.takeDate,
-        price: state.price,
+        trainNo: this.trainInfo.trainNo,
+        trainKind: this.trainInfo.trainKind,
+        fromStop: this.trainInfo.fromStop,
+        toStop: this.trainInfo.toStop,
+        fromStopTime: this.trainInfo.fromStopTime,
+        toStopTime: this.trainInfo.toStopTime,
+        takeDate: this.trainInfo.takeDate,
+        price: this.trainInfo.price,
         seatNo: ticketInfo.seatNo,
         carNo: ticketInfo.carNo,
       });
     }
   }
 
-  submit() {}
+  /**
+   * 提交訂單
+   * @returns
+   */
+  submit() {
+    this.submitted = true;
+    if (!this.submitted || this.formGroup.invalid) {
+      return;
+    }
+    this.loadingMaskService.show();
+    let formData = this.formGroup.value;
+    let request: BookTicketResource = { ...formData };
+    request.ticketUuid = this.trainInfo.ticketUuid;
+    request.trainUuid = this.trainInfo.trainUuid;
+
+    this.trainTicketService
+      .bookTicket(request)
+      .pipe(
+        finalize(() => {
+          this.submitted = false;
+          this.loadingMaskService.hide();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED' && res.message) {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success('成功新增一筆資料');
+          }
+        },
+        error: (err) => {
+          this.messageService.error(err);
+        },
+      });
+  }
 
   cancel() {}
 }
