@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreModule } from '../../../../core/core.module';
 import { Option } from '../../../../shared/models/option.model';
-
 import { SharedModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { BaseInlineEditeTableCompoent } from '../../../../shared/component/base/base-inline-edit-table.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OptionService } from '../../../../shared/services/option.service';
 import { DataType } from '../../../../core/enums/data-type.enum';
@@ -17,7 +15,6 @@ import { LoadingMaskService } from '../../../../core/services/loading-mask.servi
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogFormComponent } from '../../../../shared/component/dialog-form/dialog-form.component';
 import { TrainDetailComponent } from './train-detail/train-detail.component';
-import { FormAction } from '../../../../core/enums/form-action.enum';
 import { TrainDialogType } from '../../../../core/enums/train-dialog-type.enum';
 import { DialogConfig } from '../../../../shared/models/dialog-config.model';
 import { TrainStopsComponent } from './train-stops/train-stops.component';

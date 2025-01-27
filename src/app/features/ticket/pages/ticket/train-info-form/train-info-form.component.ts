@@ -1,24 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
 import { CoreModule } from '../../../../../core/core.module';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { BaseFormCompoent } from '../../../../../shared/component/base/base-form.component';
 import { OptionService } from '../../../../../shared/services/option.service';
-import { TrainService } from '../../../../train/services/train.service';
-import { LoadingMaskService } from '../../../../../core/services/loading-mask.service';
 import { SystemMessageService } from '../../../../../core/services/system-message.service';
 import { DataType } from '../../../../../core/enums/data-type.enum';
 import { Option } from '../../../../../shared/models/option.model';
 import { TrainTicketService } from '../../../services/train-ticket.service';
-import { TrainInfoQueriedResource } from '../../../models/train-info-queried-resource.model';
-import { finalize, lastValueFrom } from 'rxjs';
-import { NavigateService } from '../../../../../core/services/navigate.service';
 import { StorageService } from '../../../../../core/services/storage.service';
 import { Router } from '@angular/router';
-import { StepQueryKey } from '../../../../../core/enums/step-query-key.enum copy';
 
 @Component({
   selector: 'app-train-info-form',

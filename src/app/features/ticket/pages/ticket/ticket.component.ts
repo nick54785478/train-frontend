@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../../../core/core.module';
@@ -7,7 +7,6 @@ import { TrainTicketService } from '../../services/train-ticket.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { Router } from '@angular/router';
 import { StepQueryKey } from '../../../../core/enums/step-query-key.enum copy';
-import { TrainSelectingComponent } from './train-selecting/train-selectng.component';
 
 @Component({
   selector: 'app-ticket',

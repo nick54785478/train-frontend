@@ -6,9 +6,8 @@ import { LayoutService } from '../services/layout.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Router } from '@angular/router';
-import { firstValueFrom, lastValueFrom, map, of } from 'rxjs';
+import { lastValueFrom, map, of } from 'rxjs';
 import { StorageService } from '../../../core/services/storage.service';
-import { SystemStorageKey } from '../../../core/enums/system-storage.enum';
 
 @Component({
   selector: 'app-layout-sidebar',

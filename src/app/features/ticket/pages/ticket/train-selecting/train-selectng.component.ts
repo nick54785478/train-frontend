@@ -1,18 +1,10 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../../../../core/core.module';
 import { SharedModule } from '../../../../../shared/shared.module';
-import { BaseTableCompoent } from '../../../../../shared/component/base/base-table.component';
 import { TrainTicketService } from '../../../services/train-ticket.service';
 import { SystemMessageService } from '../../../../../core/services/system-message.service';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigateService } from '../../../../../core/services/navigate.service';
 import { StorageService } from '../../../../../core/services/storage.service';

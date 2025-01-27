@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  DoCheck,
   EventEmitter,
   HostListener,
   OnInit,

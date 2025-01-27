@@ -1,21 +1,11 @@
-import {
-  Component,
-  DoCheck,
-  HostListener,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LayoutTopbarComponent } from '../layout-topbar/layout-topbar.component';
 import { LayoutSidebarComponent } from '../layout-sidebar/layout-sidebar.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { StorageService } from '../../../core/services/storage.service';
 import { LayoutService } from '../services/layout.service';
-import { SystemStorageKey } from '../../../core/enums/system-storage.enum';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 
 @Component({
   selector: 'app-layout',

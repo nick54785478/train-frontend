@@ -4,10 +4,6 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { CoreModule } from '../../../../../core/core.module';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SettingService } from '../../../../setting/service/setting.service';
-import { OptionService } from '../../../../../shared/services/option.service';
-import { SystemMessageService } from '../../../../../core/services/system-message.service';
-import { BaseHeaderLineTableCompoent } from '../../../../../shared/component/base/base-header-line-table.component';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
