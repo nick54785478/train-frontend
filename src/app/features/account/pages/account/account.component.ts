@@ -8,16 +8,28 @@ import { MoneyAccountQueriedResource } from '../../models/money-account-queried-
 import { Observable } from 'rxjs/internal/Observable';
 import { AccountService } from '../../services/account.service';
 import { StorageService } from '../../../../core/services/storage.service';
-import { finalize, firstValueFrom, lastValueFrom, map, of } from 'rxjs';
+import {
+  finalize,
+  firstValueFrom,
+  lastValueFrom,
+  map,
+  of,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
 import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
+import { MenuItem } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { DialogFormComponent } from '../../../../shared/component/dialog-form/dialog-form.component';
+import { TicketRecordComponent } from './ticket-record/ticket-record.component';
 
 @Component({
   selector: 'app-account',
   standalone: true,
   imports: [SharedModule, CoreModule],
-  providers: [LoadingMaskService, AccountService],
+  providers: [LoadingMaskService, AccountService, DialogService],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
 })
@@ -27,12 +39,19 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
   mode: string = '';
 
   tableVisible: boolean = false;
+  //Table Row Actions 選單。
+  rowActionMenu: MenuItem[] = [];
+  /**
+   * 用來取消訂閱
+   */
+  readonly _destroying$ = new Subject<void>();
 
   constructor(
     private accountService: AccountService,
     private loadingMaskService: LoadingMaskService,
     private messageService: SystemMessageService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    public dialogService: DialogService
   ) {
     super();
   }
@@ -77,26 +96,26 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
         field: 'number',
         header: '車次',
       },
-      {
-        field: 'kind',
-        header: '火車種類',
-      },
-      {
-        field: 'carNo',
-        header: '車廂',
-      },
-      {
-        field: 'seatNo',
-        header: '座位',
-      },
+      // {
+      //   field: 'kind',
+      //   header: '火車種類',
+      // },
+      // {
+      //   field: 'carNo',
+      //   header: '車廂',
+      // },
+      // {
+      //   field: 'seatNo',
+      //   header: '座位',
+      // },
       {
         field: 'from',
         header: '起站',
       },
-      {
-        field: 'startTime',
-        header: '發車時間',
-      },
+      // {
+      //   field: 'startTime',
+      //   header: '發車時間',
+      // },
       {
         field: 'to',
         header: '迄站',
@@ -146,5 +165,44 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
    */
   onToggleTable() {
     this.tableVisible = !this.tableVisible;
+  }
+
+  /**
+   * Table Action 按鈕按下去的時候要把該筆資料記錄下來。
+   * @param rowData 點選的資料
+   */
+  override clickRowActionMenu(rowData: any) {
+    this.selectedData = rowData;
+    // 開啟 Dialog
+    this.openFormDialog(this.selectedData);
+  }
+
+  /**
+   * 開啟 Dialog
+   * @param data
+   */
+  openFormDialog(data: any) {
+    this.dialogOpened = true;
+    const ref = this.dialogService.open(DialogFormComponent, {
+      header: '更新一筆資料',
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true,
+      data: {
+        data: data,
+      },
+      templates: {
+        content: TicketRecordComponent,
+      },
+    });
+    // Dialog 關閉後要做的事情
+    ref?.onClose
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((returnData: any) => {
+        console.log('關閉 Dialog');
+        this.dialogOpened = false;
+      });
+    return ref;
   }
 }

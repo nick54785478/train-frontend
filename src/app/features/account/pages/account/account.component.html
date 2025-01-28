@@ -1,4 +1,4 @@
-<div class="mb-4 p-6 md:mb-6">
+<div class="mb-4 p-4 md:mb-6">
   <p-card [style]="{ width: '40rem' }">
     <form [formGroup]="formGroup">
       <!-- <p-panel
@@ -65,60 +65,60 @@
   </p-card>
 </div>
 <div class="card" *ngIf="tableVisible">
-  <p-panel header="訂票資訊" [style]="{ width: '70rem' }">
-    <p-table
-      #dt
-      responsiveLayout="stack"
-      [rowsPerPageOptions]="[2, 5, 10]"
-      styleClass="p-datatable-gridlines p-datatable-sm p-datatable-striped"
-      selectionMode="multiple"
-      [resizableColumns]="true"
-      [value]="tableData"
-      [columns]="cols"
-      [(selection)]="selectedData"
-      [scrollable]="true"
-      scrollDirection="both"
-      scrollHeight="300px"
-      [paginator]="true"
-      [rows]="10"
-    >
-      <!-- 標題 -->
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-            {{ col.header }} <p-sortIcon [field]="col.field" />
-          </th>
-          <!-- <th
-            alignFrozen="right"
-            pFrozenColumn
-            style="
-              min-width: 70px !important;
-              max-width: 70px !important;
-              width: 70px !important;
-            "
-          >
-            Actions
-          </th> -->
-        </tr>
-      </ng-template>
-      <!-- 內容 -->
-      <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData">
-          <td
-            *ngFor="let col of columns"
-            style="
-              white-space: pre-wrap;
-              word-break: break-all;
-              word-wrap: break-word;
-              max-width: 700px !important;
-              min-width: 150px !important;
-            "
-          >
-            <ng-container>
-              {{ rowData[col.field] }}
-            </ng-container>
-          </td>
-          <!-- <td alignFrozen="right" pFrozenColumn style="text-align: center">
+  <!-- <p-panel header="訂票資訊" [style]="{ width: '70rem' }"> -->
+  <p-table
+    #dt
+    responsiveLayout="stack"
+    [rowsPerPageOptions]="[2, 5, 10]"
+    styleClass="p-datatable-gridlines p-datatable-sm p-datatable-striped"
+    selectionMode="multiple"
+    [resizableColumns]="true"
+    [value]="tableData"
+    [columns]="cols"
+    [(selection)]="selectedData"
+    [scrollable]="true"
+    scrollDirection="both"
+    scrollHeight="300px"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <!-- 標題 -->
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{ col.header }} <p-sortIcon [field]="col.field" />
+        </th>
+        <th
+          alignFrozen="right"
+          pFrozenColumn
+          style="
+            min-width: 70px !important;
+            max-width: 70px !important;
+            width: 70px !important;
+          "
+        >
+          Actions
+        </th>
+      </tr>
+    </ng-template>
+    <!-- 內容 -->
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td
+          *ngFor="let col of columns"
+          style="
+            white-space: pre-wrap;
+            word-break: break-all;
+            word-wrap: break-word;
+            max-width: 700px !important;
+            min-width: 150px !important;
+          "
+        >
+          <ng-container>
+            {{ rowData[col.field] }}
+          </ng-container>
+        </td>
+        <td alignFrozen="right" pFrozenColumn style="text-align: center">
           <div>
             <p-menu
               #menu
@@ -131,13 +131,13 @@
               type="button"
               class="p-button-outlined p-button-secondary"
               style="color: rgb(1, 155, 70)"
-              icon="pi pi-pencil"
+              icon="pi pi-eye"
               (click)="clickRowActionMenu(rowData); menu.toggle($event)"
             ></button>
           </div>
-        </td> -->
-        </tr>
-      </ng-template>
-    </p-table>
-  </p-panel>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!-- </p-panel> -->
 </div>
