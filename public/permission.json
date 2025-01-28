@@ -32,14 +32,6 @@
   },
   {
     "id": "",
-    "label": "火車停靠資訊",
-    "icon": "",
-    "url": "/train/stops",
-    "routerLink": "/train/stops",
-    "visible": true
-  },
-  {
-    "id": "",
     "label": "訂票頁面",
     "icon": "",
     "url": "/ticket",

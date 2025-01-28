@@ -3,6 +3,7 @@ import { TicketComponent } from './pages/ticket/ticket.component';
 import { TrainInfoFormComponent } from './pages/ticket/train-info-form/train-info-form.component';
 import { TrainSelectingComponent } from './pages/ticket/train-selecting/train-selectng.component';
 import { TicketDetailComponent } from './pages/ticket/ticket-detail/ticket-detail.component';
+import { BookedSuccessfullyComponent } from './pages/ticket/booked-successfully/booked-successfully.component';
 
 /**
  * 定義 Users 子路由配置的檔案
@@ -21,6 +22,10 @@ export const routes: Routes = [
       {
         path: 'ticket-detail',
         component: TicketDetailComponent,
+      },
+      {
+        path: 'booked-successfully',
+        component: BookedSuccessfullyComponent,
       },
       { path: '', redirectTo: 'train-info', pathMatch: 'full' },
     ],

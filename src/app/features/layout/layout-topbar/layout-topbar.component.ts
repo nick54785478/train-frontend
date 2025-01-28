@@ -148,7 +148,7 @@ export class LayoutTopbarComponent implements OnInit {
    * 導向個人頁面
    */
   redirectPersonality() {
-    this.router.navigate(['/users/personality']);
+    this.router.navigate(['/account']);
   }
 
   /**

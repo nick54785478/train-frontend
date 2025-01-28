@@ -7,6 +7,7 @@ export const environment = {
   apiMock: false,
   apiEndpoint: '/api/v1',
   redirectUrl: 'http://localhost:4200',
+  authEndpoint: 'http://localhost:8088/api/v1',
 };
 
 /*

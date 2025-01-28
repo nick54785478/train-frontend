@@ -28,11 +28,15 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./train/train.module').then((m) => m.TrainModule),
   },
-  // 車次頁面
   {
     path: 'ticket',
     loadChildren: () =>
       import('./ticket/ticket.module').then((m) => m.TicketModule),
+  },
+  {
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.module').then((m) => m.AccountModule),
   },
   {
     path: 'setting',
