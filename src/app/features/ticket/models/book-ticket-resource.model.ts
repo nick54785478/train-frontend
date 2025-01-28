@@ -11,5 +11,5 @@ export class BookTicketResource {
 
   takeDate?: string; // 乘車日期
 
-  payByAccount?: string; // 付款方式是否透過 帳號扣款
+  payMethod?: string; // 付款方式是否透過 帳號扣款
 }

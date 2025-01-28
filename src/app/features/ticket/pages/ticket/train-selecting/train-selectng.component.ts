@@ -151,14 +151,15 @@ export class TrainSelectingComponent
     // if (this.selectedData && this.rowSelected) {
     //   return;
     // }
+
     if (this.selectedData && rowData.uuid === this.selectedData.uuid) {
       // 若 SelectedData 有值 且 uuid 相等 => 代表點選同一筆，即取消該選取
       this.detailVisible = false;
       this.selectedData = null;
     } else {
+      this.detailVisible = true;
       this.selectedData = rowData;
       console.log(rowData);
-      this.detailVisible = true;
       this.rowSelected = true;
       this.patchFormGroupValue(rowData);
     }
@@ -184,9 +185,10 @@ export class TrainSelectingComponent
    */
   isChecked(rowData: any): boolean {
     // 有選擇的資料 且有進行過 select 動作
-    if (!this.selectedData && this.rowSelected === false) {
-      return false;
-    }
+    // if (!this.selectedData && this.rowSelected === false) {
+    //   return false;
+    // }
+    console.log(this.selectedData);
 
     return this.selectedData && this.selectedData.uuid === rowData.uuid;
   }
@@ -195,8 +197,8 @@ export class TrainSelectingComponent
    * 取消選取
    */
   cancel() {
-    this.selectedData = null;
-    this.rowSelected = false;
+    // this.selectedData = null;
+    // this.rowSelected = false;
     this.detailVisible = false;
   }
 

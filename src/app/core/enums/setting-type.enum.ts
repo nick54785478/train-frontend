@@ -10,4 +10,5 @@ export enum SettingType {
   LANGUAGE = 'LANGUAGE',
   TRAIN_KIND = 'TRAIN_KIND',
   STOP_KIND = 'STOP_KIND',
+  PAY_METHOD = 'PAY_METHOD',
 }

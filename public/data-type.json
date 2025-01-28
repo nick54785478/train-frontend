@@ -76,7 +76,15 @@
     "label": "車廂編號清單",
     "value": "CAR_NO_LIST",
     "labelTw": "車廂編號清單",
-    "labelCn": "車廂編號清單",
-    "labelUs": "CAR_NO_LIST"
+    "labelCn": "车厢编号清单",
+    "labelUs": "Car No List"
+  },
+  {
+    "id": "",
+    "label": "付款方式",
+    "value": "PAY_METHOD",
+    "labelTw": "付款方式",
+    "labelCn": "付款方式",
+    "labelUs": "Pay Method"
   }
 ]

@@ -117,7 +117,9 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
     });
   }
 
-  clear() {}
+  clear() {
+    this.formGroup.reset();
+  }
 
   /**
    * 傳遞到父組件告訴他要變更階段2
