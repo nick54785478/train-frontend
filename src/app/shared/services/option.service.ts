@@ -59,6 +59,20 @@ export class OptionService {
   }
 
   /**
+   * 取得票別的下拉式選單資料
+   *
+   * @return List<OptionResource>
+   */
+  public getTicketTypes(): Observable<Option[]> {
+    const url = this.baseApiUrl + '/options/ticketTypes';
+    return this.http.get<Option[]>(url).pipe(
+      map((response) => {
+        return response;
+      })
+    );
+  }
+
+  /**
    * 取得車次號的下拉式選單資料
    *
    * @return List<OptionResource>
