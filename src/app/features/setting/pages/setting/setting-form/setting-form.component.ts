@@ -186,6 +186,7 @@ export class SettingFormComponent
       dataType: data.dataType,
       type: data.type,
       name: data.name,
+      value: data.value,
       description: data.description,
       priorityNo: data.priorityNo,
       activeFlag: data.activeFlag,
