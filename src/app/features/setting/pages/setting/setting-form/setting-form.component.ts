@@ -53,6 +53,7 @@ export class SettingFormComponent
       dataType: new FormControl('', [Validators.required]),
       type: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
+      value: new FormControl('', [Validators.required]),
       description: new FormControl(''),
       priorityNo: new FormControl(''),
       activeFlag: new FormControl(''),

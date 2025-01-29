@@ -86,5 +86,21 @@
     "labelTw": "付款方式",
     "labelCn": "付款方式",
     "labelUs": "Pay Method"
+  },
+  {
+    "id": "",
+    "label": "車票種類",
+    "value": "TICKET_TYPE",
+    "labelTw": "車票種類",
+    "labelCn": "车票种类",
+    "labelUs": "Ticket Type"
+  },
+  {
+    "id": "",
+    "label": "票價比率",
+    "value": "TICKET_PRICE_RATE",
+    "labelTw": "票價比率",
+    "labelCn": "票价比率",
+    "labelUs": "Ticket Price Rate"
   }
 ]
