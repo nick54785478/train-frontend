@@ -184,7 +184,7 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
   openFormDialog(data: any) {
     this.dialogOpened = true;
     const ref = this.dialogService.open(DialogFormComponent, {
-      header: '更新一筆資料',
+      header: '訂票詳細資料',
       width: '70%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
