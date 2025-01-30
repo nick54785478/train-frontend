@@ -27,6 +27,22 @@
           >
           </p-dropdown>
         </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <label class="required">車票種類</label>
+          <p-dropdown
+            [options]="ticketTypes"
+            optionValue="value"
+            optionLabel="value"
+            placeholder="請選擇"
+            [showClear]="true"
+            appendTo="body"
+            formControlName="ticketType"
+          >
+          </p-dropdown>
+          <div *ngIf="formControlInvalid('ticketType')">
+            <small class="p-error"> 該欄位不能為空 </small>
+          </div>
+        </div>
       </div>
       <div class="grid p-fluid">
         <div class="col-12 md:col-3 lg:col-3">

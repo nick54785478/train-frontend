@@ -104,6 +104,7 @@ export class TrainSelectingComponent
       let toStop = params['toStop'] || '';
       let takeDate = params['takeDate'] || '';
       let takeTime = params['takeTime'] || '';
+      let ticketType = params['ticketType'] || '';
 
       // 將 queryParam 轉換為字串存入 Session Storage
       const searchParams = new URLSearchParams(params).toString();
@@ -114,7 +115,15 @@ export class TrainSelectingComponent
 
       this.tableData = await firstValueFrom(
         this.trainTicketService
-          .query(trainNo, trainKind, fromStop, toStop, takeDate, takeTime)
+          .query(
+            trainNo,
+            trainKind,
+            fromStop,
+            toStop,
+            takeDate,
+            takeTime,
+            ticketType
+          )
           .pipe(takeUntil(this._destroying$))
       );
     });

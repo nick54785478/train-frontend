@@ -33,7 +33,8 @@ export class TrainTicketService {
     fromStop?: string,
     toStop?: string,
     takeDate?: string,
-    time?: string
+    time?: string,
+    ticketType?: string
   ): Observable<TrainInfoQueriedResource[]> {
     const url = this.baseApiUrl + '/train';
     let params = new HttpParams()
@@ -42,7 +43,8 @@ export class TrainTicketService {
       .set('fromStop', fromStop ? fromStop : '')
       .set('toStop', toStop ? toStop : '')
       .set('takeDate', takeDate ? takeDate : '')
-      .set('time', time ? time : '');
+      .set('time', time ? time : '')
+      .set('ticketType', ticketType ? ticketType : '');
     return this.http.get<TrainInfoQueriedResource[]>(url, { params });
   }
 

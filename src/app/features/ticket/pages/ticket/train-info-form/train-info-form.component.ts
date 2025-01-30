@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs/internal/Subject';
@@ -27,6 +33,7 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
   trainNoList: Option[] = []; // TrainNo 的下拉式選單
   stops: Option[] = []; // 車站資料的下拉式選單
   kinds: Option[] = []; // 車種資料的下拉式選單
+  ticketTypes: Option[] = []; // 車票種類的下拉式選單
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
 
   constructor(
@@ -45,6 +52,7 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
     this.formGroup = new FormGroup({
       trainNo: new FormControl(''), // 車次
       trainKind: new FormControl(''), // 車種
+      ticketType: new FormControl('', [Validators.required]), // 票別
       fromStop: new FormControl('', [Validators.required]), // 起站
       toStop: new FormControl('', [Validators.required]), // 起站
       takeDate: new FormControl('', [Validators.required]), // 搭乘日期
@@ -64,6 +72,18 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
     this.optionService.getTrainKinds().subscribe({
       next: (res) => {
         this.kinds = res;
+      },
+      error: (error) => {
+        this.messageService.error(
+          '取得火車種類的下拉式選單資料時，發生錯誤',
+          error.message
+        );
+      },
+    });
+    //	 取得車票種類的下拉式選單資料
+    this.optionService.getTicketTypes().subscribe({
+      next: (res) => {
+        this.ticketTypes = res;
       },
       error: (error) => {
         this.messageService.error(
@@ -111,6 +131,7 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
         trainKind: formData.trainKind,
         fromStop: formData.fromStop,
         toStop: formData.toStop,
+        ticketType: formData.ticketType,
         takeDate: formData.takeDate,
         takeTime: formData.takeTime,
       },

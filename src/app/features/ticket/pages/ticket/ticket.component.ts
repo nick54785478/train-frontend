@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../../../core/core.module';
@@ -16,7 +16,7 @@ import { StepQueryKey } from '../../../../core/enums/step-query-key.enum copy';
   templateUrl: './ticket.component.html',
   styleUrl: './ticket.component.scss',
 })
-export class TicketComponent implements OnInit {
+export class TicketComponent implements OnInit, AfterViewInit {
   activeStepIndex: number = 0; // 控制階段
 
   constructor(private storageService: StorageService, private router: Router) {}
@@ -26,6 +26,12 @@ export class TicketComponent implements OnInit {
       this.storageService.getSessionStorageItem('step')
     );
     console.log(this.activeStepIndex);
+  }
+
+  ngAfterViewInit(): void {
+    this.activeStepIndex = Number(
+      this.storageService.getSessionStorageItem('step')
+    );
   }
 
   query() {}
