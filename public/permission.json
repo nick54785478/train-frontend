@@ -24,10 +24,18 @@
   },
   {
     "id": "",
-    "label": "新增火車資訊",
+    "label": "新增車次資訊",
     "icon": "",
     "url": "/train/create",
     "routerLink": "/train/create",
+    "visible": true
+  },
+    {
+    "id": "",
+    "label": "新增車票資訊",
+    "icon": "",
+    "url": "/ticket/create",
+    "routerLink": "/ticket/create",
     "visible": true
   },
   {
