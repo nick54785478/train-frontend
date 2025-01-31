@@ -21,12 +21,18 @@ import {
   UpdateStopResource,
   UpdateTrainResource,
 } from '../../models/update-train-resource.model';
+import { DialogConfirmService } from '../../../../core/services/dialog-confirm.service';
 
 @Component({
   selector: 'app-train-maintenance',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [OptionService, SystemMessageService, DialogService],
+  providers: [
+    OptionService,
+    SystemMessageService,
+    DialogService,
+    DialogConfirmService,
+  ],
   templateUrl: './train-maintenance.component.html',
   styleUrl: './train-maintenance.component.scss',
 })
@@ -40,6 +46,7 @@ export class TrainMaintenanceComponent
   rowActionMenu: MenuItem[] = []; // Table Row Actions 右側選單。
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
   constructor(
+    private dialogConfirmService: DialogConfirmService,
     private loadingMaskService: LoadingMaskService,
     private dialogService: DialogService,
     private optionService: OptionService,
@@ -105,23 +112,12 @@ export class TrainMaintenanceComponent
           this.mode === 'edit',
       },
       {
-        label: '取消',
+        label: '放棄',
         icon: 'pi pi-times',
         command: () => {
           this.cancelAll();
         },
         disabled: this.tableData.length === 0,
-      },
-      {
-        label: '刪除',
-        icon: 'pi pi-trash',
-        command: () => {
-          this.onStartDelete();
-        },
-        disabled:
-          !(this.mode !== 'add') ||
-          !(this.mode !== 'edit') ||
-          this.tableData.length === 0,
       },
     ];
     // 初始化 Table 配置
@@ -173,23 +169,12 @@ export class TrainMaintenanceComponent
           this.mode === 'edit',
       },
       {
-        label: '取消',
+        label: '放棄',
         icon: 'pi pi-times',
         command: () => {
           this.cancelAll();
         },
         disabled: this.tableData.length === 0,
-      },
-      {
-        label: '刪除',
-        icon: 'pi pi-trash',
-        command: () => {
-          this.onStartDelete();
-        },
-        disabled:
-          !(this.mode !== 'add') ||
-          !(this.mode !== 'edit') ||
-          this.tableData.length === 0,
       },
     ];
   }
@@ -314,8 +299,13 @@ export class TrainMaintenanceComponent
     // 開啟 Dialog
   }
 
+  /**
+   * 切換 編輯模式
+   * @param rowIndex
+   * @returns
+   */
   onEdit(rowIndex: number) {
-    // 若目前為 新增模式 pass
+    // 若目前為 新增模式或刪除模式 pass
     if (this.mode === 'add' || this.mode === 'delete') {
       return;
     }
@@ -339,6 +329,33 @@ export class TrainMaintenanceComponent
   }
 
   /**
+   * 進行刪除動作
+   * @param givenIndex
+   */
+  onDelete(givenIndex: number) {
+    // 若目前為 新增模式或編輯模式 pass
+    if (this.mode === 'add' || this.mode === 'edit') {
+      return;
+    }
+    // 進入編輯模式
+    this.mode = 'delete';
+    this.dialogConfirmService.confirmDelete(
+      () => {
+        // 確認後的動作 => 過濾該 givenIndex 的資料
+        this.tableData = this.tableData.filter(
+          (data) => data.givenIndex !== givenIndex
+        );
+        this.mode = '';
+      },
+      '',
+      () => {
+        // 取消 delete 模式
+        this.mode = '';
+      }
+    );
+  }
+
+  /**
    * 判斷Type欄位是否可修改
    * @param rowData 該 row 的資料
    * @param field 欄位名稱
@@ -354,23 +371,6 @@ export class TrainMaintenanceComponent
       return true;
     }
     return false;
-  }
-
-  /**
-   * 進行刪除
-   * @param id
-   * @param isSelected 是否被選中
-   */
-  onDelete(id: number, isSelected: boolean) {
-    // 如果不包含該 id 加入
-    if (isSelected) {
-      // 若選中，添加到陣列
-      this.deleteList.push(id);
-    } else {
-      // 若取消選中，從陣列移除
-      this.deleteList = this.deleteList.filter((e) => e !== id);
-    }
-    console.log(this.deleteList);
   }
 
   // 刪除幾列資料

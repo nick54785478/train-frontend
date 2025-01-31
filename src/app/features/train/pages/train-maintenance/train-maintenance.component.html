@@ -103,12 +103,6 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td *ngIf="mode === 'delete'">
-            <p-checkbox
-              [binary]="true"
-              (onChange)="onDelete(rowData.id, $event.checked)"
-            ></p-checkbox>
-          </td>
           <td *ngFor="let col of columns">
             <!-- 編輯模式 -->
             <!-- else viewMode -->
@@ -212,7 +206,20 @@
               style="color: #2196f3"
               class="p-button-outlined p-button-secondary"
               icon="pi pi-pencil"
-              (click)="clickRowActionMenu(rowData); onEdit(rowIndex)"
+              (click)="clickRowActionMenu(rowData); onEdit(rowData.givenIndex)"
+            ></button>
+            <button
+              *ngIf="mode === ''"
+              pButton
+              [rounded]="true"
+              [text]="true"
+              type="button"
+              style="color: #f70202"
+              class="p-button-outlined p-button-secondary"
+              icon="pi pi-trash"
+              (click)="
+                clickRowActionMenu(rowData); onDelete(rowData.givenIndex)
+              "
             ></button>
             <div class="flex mb-2 gap-2 justify-content-start">
               <ng-container *ngIf="isEditing(rowIndex) || isAdding(rowData)">
