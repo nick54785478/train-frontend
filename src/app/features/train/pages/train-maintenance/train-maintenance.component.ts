@@ -48,7 +48,6 @@ export class TrainMaintenanceComponent
   constructor(
     private dialogConfirmService: DialogConfirmService,
     private loadingMaskService: LoadingMaskService,
-    private dialogService: DialogService,
     private optionService: OptionService,
     private trainService: TrainService,
     private messageService: SystemMessageService
@@ -301,30 +300,33 @@ export class TrainMaintenanceComponent
 
   /**
    * 切換 編輯模式
-   * @param rowIndex
+   * @param givenIndex
    * @returns
    */
-  onEdit(rowIndex: number) {
+  onEdit(givenIndex: number) {
     // 若目前為 新增模式或刪除模式 pass
     if (this.mode === 'add' || this.mode === 'delete') {
       return;
     }
 
     // 避免當我進入編輯模式後，再點擊其他列導致進入其他列的編輯模式
-    if (this.mode === 'edit' && rowIndex !== this.editingIndex) {
+    if (this.mode === 'edit' && givenIndex !== this.editingIndex) {
       return;
     }
 
     // 進入編輯模式
     this.mode = 'edit';
 
-    if (typeof rowIndex === 'number') {
+    if (typeof givenIndex === 'number') {
       // 選取的 rowIndex
-      this.selectedIndex = rowIndex;
+      this.selectedIndex = givenIndex;
       // 被編輯的 row 資料
-      this.editingIndex = rowIndex;
+      this.editingIndex = givenIndex;
     }
-    this.selectedData = this.tableData[rowIndex];
+    // 根據 givenIndex 找出該筆資料
+    this.selectedData = this.tableData.find(
+      (data) => data.givenIndex === givenIndex
+    );
     this.editingRow = { ...this.selectedData }; // 深拷貝選中的行資料，避免直接修改原始數據
   }
 
@@ -419,8 +421,8 @@ export class TrainMaintenanceComponent
   /**
    * 判斷是否為編輯模式
    * */
-  isEditing(rowIndex: any): boolean {
-    return this.editingIndex === rowIndex;
+  isEditing(givenIndex: any): boolean {
+    return this.editingIndex === givenIndex;
   }
 
   /**
