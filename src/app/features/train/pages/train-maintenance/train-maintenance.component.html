@@ -1,49 +1,48 @@
-<p-tabMenu
-  #detailTabMenuComponent
-  [model]="detailTabs"
-  styleClass="table-tabmenu"
->
-</p-tabMenu>
 <form [formGroup]="formGroup">
-  <p-panel header="新增火車車次資料">
+  <p-panel header="火車車次維護">
     <div class="card" #contentElement>
       <div class="grid p-fluid">
         <div class="col-12 md:col-3 lg:col-3">
-          <label class="required">火車車次</label>
-          <input type="number" pInputText formControlName="trainNo" />
-          <div *ngIf="formControlInvalid('trainNo')">
-            <small class="p-error"> 資料格式有誤 </small>
-          </div>
-        </div>
-        <div class="col-12 md:col-3 lg:col-3">
           <label class="required">種類</label>
           <p-dropdown
-            [options]="kinds"
+            [options]="trainNos"
             optionValue="value"
             placeholder="請選擇"
             [showClear]="true"
             appendTo="body"
             optionLabel="value"
-            formControlName="trainKind"
+            formControlName="trainNo"
           >
           </p-dropdown>
-          <div *ngIf="formControlInvalid('trainKind')">
+          <div *ngIf="formControlInvalid('trainNo')">
             <small class="p-error"> 資料不能為空 </small>
           </div>
         </div>
       </div>
-    </div>
-    <div [style]="{ 'margin-top': '3rem', 'font-weight': 'bold' }">
-      <span> * Remark:車次單數為北上、雙數為南下 </span>
+
+      <div class="grid p-fluid justify-content-end">
+        <div class="col-12 md:col-3 lg:col-3">
+          <button type="button" pButton label="查詢" (click)="query()"></button>
+        </div>
+        <div class="col-12 md:col-3 lg:col-3">
+          <button
+            type="button"
+            class="p-button-secondary p-button-outlined"
+            pButton
+            label="清除"
+            (click)="clear()"
+          ></button>
+        </div>
+      </div>
     </div>
   </p-panel>
 </form>
-
-<!-- 表格 -->
+<!-- 火車車次 -->
 <p-panel [showHeader]="false">
+  <!-- 表格 -->
   <p-tabMenu
     #detailTabMenuComponent
-    [model]="lineDetailTabs"
+    [model]="detailTabs"
     styleClass="table-tabmenu"
   >
   </p-tabMenu>
@@ -64,6 +63,8 @@
       scrollDirection="both"
       [resizableColumns]="true"
     >
+      <!-- scrollDirection="both"  [resizableColumns]="true"-->
+
       <!-- 標題 -->
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -77,9 +78,9 @@
               width: 300px !important;
             "
           >
-            <ng-container>
-              {{ col.header }} <p-sortIcon [field]="col.field" />
-            </ng-container>
+            <ng-container
+              >{{ col.header }} <p-sortIcon [field]="col.field"
+            /></ng-container>
           </th>
           <th
             alignFrozen="right"
@@ -99,7 +100,6 @@
         pTemplate="body"
         let-rowData
         let-columns="columns"
-        let-editing="editing"
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
@@ -121,13 +121,13 @@
                   placeholder="請選擇"
                   [(ngModel)]="rowData[col.field]"
                   [options]="loadDropdownData(col)"
-                  optionLabel="value"
-                  optionValue="label"
                   [style]="{
                     'word-wrap': 'break-word',
                     'max-width': '100%',
                     'min-width': '100%'
                   }"
+                  optionLabel="label"
+                  optionValue="value"
                   appendTo="body"
                 ></p-dropdown>
               </ng-container>
@@ -139,8 +139,8 @@
                   cols="100"
                   [style]="{
                     'word-wrap': 'break-word',
-                    'max-width': '100% !important',
-                    'min-width': '100%  !important'
+                    'max-width': '100%',
+                    'min-width': '100%'
                   }"
                   pInputTextarea
                   [autoResize]="true"
@@ -152,12 +152,12 @@
                   [(ngModel)]="rowData[col.field]"
                   type="text"
                   appAutofocus
-                  class="p-inputtext"
                   [style]="{
                     'word-wrap': 'break-word',
-                    'max-width': '100% !important',
-                    'min-width': '100%  !important'
+                    'max-width': '100%',
+                    'min-width': '100%'
                   }"
+                  class="p-inputtext"
                   pInputText
                 />
               </ng-container>
@@ -166,13 +166,13 @@
                   [(ngModel)]="rowData[col.field]"
                   type="number"
                   appAutofocus
-                  class="p-inputtext"
                   [style]="{
                     'word-wrap': 'break-word',
-                    'max-width': '100% !important',
-                    'min-width': '100%  !important'
+                    'max-width': '100%',
+                    'min-width': '100%'
                   }"
-                  pInputNumber
+                  class="p-inputtext"
+                  pInputText
                 />
               </ng-container>
               <ng-container *ngIf="col.type === 'inputTime'">
@@ -182,11 +182,11 @@
                   appAutofocus
                   [style]="{
                     'word-wrap': 'break-word',
-                    'max-width': '100% !important',
-                    'min-width': '100%  !important'
+                    'max-width': '100%',
+                    'min-width': '100%'
                   }"
                   class="p-inputtext"
-                  pInputTime
+                  pInputText
                 />
               </ng-container>
               <div *ngIf="!rowData[col.field]">
@@ -203,6 +203,17 @@
           </td>
 
           <td pFrozenColumn>
+            <button
+              *ngIf="mode === ''"
+              pButton
+              [rounded]="true"
+              [text]="true"
+              type="button"
+              style="color: #2196f3"
+              class="p-button-outlined p-button-secondary"
+              icon="pi pi-pencil"
+              (click)="clickRowActionMenu(rowData); onEdit(rowIndex)"
+            ></button>
             <div class="flex mb-2 gap-2 justify-content-start">
               <ng-container *ngIf="isEditing(rowIndex) || isAdding(rowData)">
                 <i
@@ -223,4 +234,6 @@
       </ng-template>
     </p-table>
   </div>
+
+  <p-toast position="bottom-right" key="msg" />
 </p-panel>

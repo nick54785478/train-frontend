@@ -7,6 +7,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TrainCreatedResource } from '../models/train-created-resource.model ';
 import { TrainSummaryQueriedResource } from '../models/train-summary-queried-resource.model';
 import { StopDetailQueriedResource } from '../models/stop-detail-queried-resource.model';
+import { TrainQueriedResource } from '../models/train-queried-resource.model';
+import { UpdateTrainResource } from '../models/update-train-resource.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,15 @@ export class TrainService {
   createTrain(requestData: CreateTrainResource): Observable<BaseResponse> {
     const url = this.baseApiUrl + '/train';
     return this.http.post<BaseResponse>(url, requestData);
+  }
+
+  /**
+   * 提交新增火車時刻資料
+   * @param requestData
+   */
+  updateTrain(requestData: UpdateTrainResource): Observable<BaseResponse> {
+    const url = this.baseApiUrl + '/train';
+    return this.http.put<BaseResponse>(url, requestData);
   }
 
   /**
@@ -70,5 +81,15 @@ export class TrainService {
     const url = this.baseApiUrl + '/train/stops/details';
     let params = new HttpParams().set('uuid', uuid).set('fromStop', fromStop);
     return this.http.get<StopDetailQueriedResource[]>(url, { params });
+  }
+
+  /**
+   * 取得該火車車次的資訊
+   * @param trainNo
+   * @returns
+   */
+  queryTrain(trainNo: string): Observable<TrainQueriedResource> {
+    const url = this.baseApiUrl + '/train/' + trainNo + '/stops';
+    return this.http.get<TrainQueriedResource>(url);
   }
 }
