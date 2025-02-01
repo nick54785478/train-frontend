@@ -265,7 +265,7 @@ export class TrainComponent
 
     const ref = this.dialogService.open(DialogFormComponent, {
       header: config.header,
-      width: '80%',
+      width: '85%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       maximizable: true,

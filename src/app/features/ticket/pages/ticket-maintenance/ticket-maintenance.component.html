@@ -1,30 +1,30 @@
 <form [formGroup]="formGroup">
-  <p-panel header="車次停靠站維護">
+  <p-panel header="車票資訊維護">
     <div class="card" #contentElement>
       <div class="grid p-fluid">
         <div class="col-12 md:col-3 lg:col-3">
-          <label class="required">種類</label>
+          <label class="required">車次</label>
           <p-dropdown
             [options]="trainNos"
             optionValue="value"
             placeholder="請選擇"
             [showClear]="true"
             appendTo="body"
-            optionLabel="value"
             formControlName="trainNo"
           >
           </p-dropdown>
           <div *ngIf="formControlInvalid('trainNo')">
-            <small class="p-error"> 資料不能為空 </small>
+            <small class="p-error"> 該資料不能為空 </small>
           </div>
         </div>
       </div>
 
+      &nbsp;
       <div class="grid p-fluid justify-content-end">
-        <div class="col-12 md:col-2 lg:col-2">
+        <div class="col-12 md:col-3 lg:col-2">
           <button type="button" pButton label="查詢" (click)="query()"></button>
         </div>
-        <div class="col-12 md:col-2 lg:col-2">
+        <div class="col-12 md:col-3 lg:col-2">
           <button
             type="button"
             class="p-button-secondary p-button-outlined"
@@ -37,6 +37,7 @@
     </div>
   </p-panel>
 </form>
+
 <!-- 火車車次 -->
 <p-panel [showHeader]="false">
   <!-- 表格 -->

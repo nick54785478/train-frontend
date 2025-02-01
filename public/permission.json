@@ -32,10 +32,10 @@
   }, 
   {
     "id": "",
-    "label": "新增車票資訊",
+    "label": "車票資訊維護",
     "icon": "",
-    "url": "/ticket/create",
-    "routerLink": "/ticket/create",
+    "url": "/ticket/maintenance",
+    "routerLink": "/ticket/maintenance",
     "visible": true
   }, 
   {

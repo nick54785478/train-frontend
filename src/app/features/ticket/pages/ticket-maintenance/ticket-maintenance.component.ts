@@ -1,90 +1,87 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { BaseInlineEditeTableCompoent } from '../../../../shared/component/base/base-inline-edit-table.component';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
-import { CoreModule } from '../../../../core/core.module';
-import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
-import { DialogService } from 'primeng/dynamicdialog';
 import { OptionService } from '../../../../shared/services/option.service';
+import { TrainTicketService } from '../../services/train-ticket.service';
+import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
-import { MenuItem } from 'primeng/api';
-import { Subject } from 'rxjs/internal/Subject';
+import { CommonModule } from '@angular/common';
+import { CoreModule } from '../../../../core/core.module';
+import { SharedModule } from '../../../../shared/shared.module';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Option } from '../../../../shared/models/option.model';
-import { SettingType } from '../../../../core/enums/setting-type.enum';
-import { TrainSeatService } from '../../../ticket/services/train-seat.service';
-import { TrainService } from '../../services/train.service';
-import { finalize } from 'rxjs/internal/operators/finalize';
-import { TrainKind } from '../../../../core/enums/train-kind.enum copy';
 import { DataType } from '../../../../core/enums/data-type.enum';
-import {
-  UpdateStopResource,
-  UpdateTrainResource,
-} from '../../models/update-train-resource.model';
+import { Option } from '../../../../shared/models/option.model';
+import { finalize } from 'rxjs/internal/operators/finalize';
 import { DialogConfirmService } from '../../../../core/services/dialog-confirm.service';
+import { CreateOrUpdateTicketResource } from '../../models/create-or-update-ticket-resource.model';
 
 @Component({
-  selector: 'app-train-maintenance',
+  selector: 'app-ticket-maintenance',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [
-    OptionService,
-    SystemMessageService,
-    DialogService,
-    DialogConfirmService,
-  ],
-  templateUrl: './train-maintenance.component.html',
-  styleUrl: './train-maintenance.component.scss',
+  providers: [DialogConfirmService],
+  templateUrl: './ticket-maintenance.component.html',
+  styleUrl: './ticket-maintenance.component.scss',
 })
-export class TrainMaintenanceComponent
+export class TicketMaintenanceComponent
   extends BaseInlineEditeTableCompoent
   implements OnInit, DoCheck
 {
   trainNos: Option[] = [];
   stops: Option[] = [];
-  dialogOpened: boolean = false; //  Dialog 狀態
-  rowActionMenu: MenuItem[] = []; // Table Row Actions 右側選單。
-  readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
   constructor(
-    private dialogConfirmService: DialogConfirmService,
-    private loadingMaskService: LoadingMaskService,
     private optionService: OptionService,
-    private trainService: TrainService,
-    private messageService: SystemMessageService
+    private trainTicketService: TrainTicketService,
+    private loadingMaskService: LoadingMaskService,
+    private messageService: SystemMessageService,
+    private dialogConfirmService: DialogConfirmService
   ) {
     super();
   }
-
   ngOnInit(): void {
+    // 初始化表單
     this.formGroup = new FormGroup({
-      trainNo: new FormControl('', [Validators.required]),
+      trainNo: new FormControl('', [Validators.required]), // 車次
     });
 
-    this.optionService.getSettingTypes(SettingType.STOP_KIND).subscribe({
+    this.optionService.getSettingTypes(DataType.STOP_KIND).subscribe({
       next: (res) => {
-        console.log(res);
         this.stops = res;
       },
-      error: (error) => {
-        this.messageService.error(
-          '取得車次的下拉式選單資料時，發生錯誤',
-          error.message
-        );
+      error: (err) => {
+        this.messageService.error(err);
       },
     });
 
     this.optionService.getTrainNoList().subscribe({
       next: (res) => {
-        console.log(res);
         this.trainNos = res;
       },
-      error: (error) => {
-        this.messageService.error(
-          '取得車次的下拉式選單資料時，發生錯誤',
-          error.message
-        );
+      error: (err) => {
+        this.messageService.error(err);
       },
     });
+
+    // 初始化 Table 配置
+    this.cols = [
+      {
+        field: 'fromStop',
+        header: '起站',
+        type: 'dropdown',
+        data: 'fromStop',
+      },
+      {
+        field: 'toStop',
+        header: '迄站',
+        type: 'dropdown',
+        data: 'toStop',
+      },
+      {
+        field: 'price',
+        header: '票價',
+        type: 'inputNumber',
+        data: '',
+      },
+    ];
 
     this.detailTabs = [
       {
@@ -119,29 +116,7 @@ export class TrainMaintenanceComponent
         disabled: this.tableData.length === 0,
       },
     ];
-    // 初始化 Table 配置
-    this.cols = [
-      {
-        field: 'seq',
-        header: '停站順序',
-        type: 'inputNumber',
-        data: '',
-      },
-      {
-        field: 'stopName',
-        header: '停靠站名',
-        type: 'dropdown',
-        data: 'stopName', // 取已選中的 dropdown
-      },
-      {
-        field: 'stopTime',
-        header: '停站時間',
-        type: 'inputTime',
-        data: '', // 取已選中的 dropdown
-      },
-    ];
   }
-
   ngDoCheck(): void {
     this.detailTabs = [
       {
@@ -179,6 +154,193 @@ export class TrainMaintenanceComponent
   }
 
   /**
+   * 提交資料 - 查詢該車次的車票資訊
+   * @returns
+   */
+  override submit() {
+    this.submitted = true;
+    if (
+      !this.submitted ||
+      this.formGroup.invalid ||
+      this.tableData.length === 0 ||
+      this.mode !== ''
+    ) {
+      return;
+    }
+    this.loadingMaskService.show();
+    const formData = this.formGroup.value;
+
+    // 停靠站清單
+    const resources: CreateOrUpdateTicketResource[] = this.tableData.map(
+      (res) => ({
+        ticketNo: res.ticketNo,
+        fromStop: res.fromStop,
+        toStop: res.toStop,
+        price: res.price,
+      })
+    );
+
+    this.trainTicketService
+      .createTicket(formData.trainNo, resources)
+      .pipe(
+        finalize(() => {
+          this.loadingMaskService.hide();
+          this.submitted = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED') {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success(res.message);
+          }
+        },
+        error: (err) => {
+          this.messageService.error('發生錯誤，新增失敗', err);
+        },
+      });
+  }
+
+  /**
+   * 查詢該車次的車票資訊
+   */
+  query() {
+    this.submitted = true;
+    if (!this.submitted || this.formGroup.invalid) {
+      return;
+    }
+    this.loadingMaskService.show();
+    const formData = this.formGroup.value;
+    this.trainTicketService
+      .queryTicketsByTrainNo(formData.trainNo)
+      .pipe(
+        finalize(() => {
+          this.loadingMaskService.hide();
+          this.submitted = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.tableData = res;
+          // 對所有資料進行編號
+          for (var i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].givenIndex = i;
+          }
+        },
+        error: (err) => {
+          this.messageService.error('發生錯誤，新增失敗', err);
+        },
+      });
+  }
+
+  /**
+   * 新增一筆空的 row 資料
+   * */
+  addNewRow(): void {
+    // 如果是編輯或刪除模式，就不新增資料
+    if (this.mode === 'edit' || this.mode === 'delete') {
+      return;
+    }
+
+    // 設定模式為 新增模式
+    this.mode = 'add';
+    this.newRow = {
+      id: null,
+      fromStop: '',
+      toStop: '',
+      price: '',
+      givenIndex: 0, // 前端給予的編號資料
+      // givenIndex: this.tableData.length, // 前端給予的編號資料
+    };
+
+    // 所有編號往後推一號
+    this.tableData.forEach((e) => {
+      e.givenIndex += 1;
+    });
+
+    // 將 index 加入 newRowIndexes，用以紀錄更新資料的 index
+    this.newRowIndexes.push(this.newRow.givenIndex);
+    // 將此資料推入 tableData
+    this.tableData.push(this.newRow);
+    // 根據 givenIndex 重排序
+    this.tableData.sort((a, b) => {
+      if (a.givenIndex < b.givenIndex) {
+        return -1; // a 排在 b 前
+      } else if (a.givenIndex > b.givenIndex) {
+        return 1; // b 排在 a 前
+      } else {
+        return 0; // 保持順序
+      }
+    });
+    console.log(this.tableData);
+  }
+
+  /**
+   * 在編輯模式載入下拉式選單資料
+   * @param col
+   * @returns
+   */
+  override loadDropdownData(col: any) {
+    if (col.field === 'fromStop' || col.field === 'toStop') {
+      return this.stops;
+    }
+    return [];
+  }
+
+  /**
+   * 回歸原狀，原先新增的資料全部放棄。
+   */
+  /**
+   * 回歸原狀，原先新增的資料全部放棄。
+   */
+  cancelAll() {
+    // 若在編輯模式中取消，呼叫 cancelEdit 方法
+    if (this.mode === 'edit') {
+      this.cancelEdit();
+    }
+    this.mode = '';
+    this.newRow = '';
+    this.newRowIndexes = [];
+    this.selectedData = null;
+    this.selectedIndex = -1;
+    this.editingIndex = -1;
+    this.editingRow = [];
+    this.tableData = this.tableData.filter((data) => data.id !== null);
+  }
+
+  /**
+   * 進行刪除
+   */
+  onStartDelete() {
+    this.mode = 'delete';
+  }
+
+  // 檢查 row 資料是否有未填欄位
+  override checkRowData(selectedData: any): boolean {
+    if (!selectedData.fromStop || !selectedData.toStop || !selectedData.price) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * 清除表單資料
+   */
+  override clear() {
+    // this.formGroup.reset();
+    this.formGroup.setValue({
+      trainNo: '', // 車次
+    });
+
+    this.tableData = [];
+    this.selectedIndex = -1;
+    this.selectedData = null;
+    this.editingIndex = -1;
+    this.editingRow = null;
+    this.mode = '';
+  }
+  /**
    * 取消編輯/新增
    * */
   cancel(rowIndex?: number) {
@@ -211,9 +373,9 @@ export class TrainMaintenanceComponent
         e.id === this.editingRow.id &&
         e.givenIndex === this.editingRow.givenIndex
       ) {
-        e.seq = this.editingRow.seq;
-        e.stopName = this.editingRow.stopName;
-        e.stopTime = this.editingRow.stopTime;
+        e.fromStop = this.editingRow.fromStop;
+        e.toStop = this.editingRow.toStop;
+        e.price = this.editingRow.price;
       }
     });
 
@@ -227,15 +389,15 @@ export class TrainMaintenanceComponent
    *
    * @param rowIndex 當前 row 資料的 index
    */
-  cancelAdd(rowIndex: number) {
+  cancelAdd(givenIndex: number) {
     if (this.mode === 'add') {
       // 過濾出 id != null 者 (現有資料) 及 沒被選上的資料
       this.tableData = this.tableData.filter(
-        (data) => data.id !== null || data?.givenIndex !== rowIndex
+        (data) => data.id !== null || data?.givenIndex !== givenIndex
       );
       // 過濾掉該 rowIndex
       this.newRowIndexes = this.newRowIndexes.filter(
-        (index) => index !== rowIndex
+        (index) => index !== givenIndex
       );
     }
     // reset 新增資料
@@ -380,36 +542,6 @@ export class TrainMaintenanceComponent
   override delete(ids: number[], event?: Event) {}
 
   /**
-   * 透過特定條件查詢設定資料，
-   * 註.需重新排序 givenIndex
-   */
-  query() {
-    this.submitted = true;
-    if (!this.submitted || this.formGroup.invalid) {
-      return;
-    }
-
-    this.loadingMaskService.show();
-    const formData = this.formGroup.value;
-    this.trainService
-      .queryTrain(formData.trainNo)
-      .pipe(
-        finalize(() => {
-          this.loadingMaskService.hide();
-          this.submitted = false;
-        })
-      )
-      .subscribe((res) => {
-        console.log(res);
-        this.tableData = res.stops;
-        // 對所有資料進行編號
-        for (var i = 0; i < this.tableData.length; i++) {
-          this.tableData[i].givenIndex = i;
-        }
-      });
-  }
-
-  /**
    * 判斷是否為新增模式
    * @param rowData 當前的 row 資料
    * */
@@ -424,159 +556,5 @@ export class TrainMaintenanceComponent
    * */
   isEditing(givenIndex: any): boolean {
     return this.editingIndex === givenIndex;
-  }
-
-  /**
-   * 新增一筆空的 row 資料
-   * */
-  addNewRow(): void {
-    // 如果是編輯或刪除模式，就不新增資料
-    if (this.mode === 'edit' || this.mode === 'delete') {
-      return;
-    }
-
-    // 設定模式為 新增模式
-    this.mode = 'add';
-    this.newRow = {
-      id: null,
-      seq: '',
-      stopName: '',
-      stopTime: '',
-      givenIndex: 0, // 前端給予的編號資料
-      // givenIndex: this.tableData.length, // 前端給予的編號資料
-    };
-
-    // 所有編號往後推一號
-    this.tableData.forEach((e) => {
-      e.givenIndex += 1;
-    });
-
-    // 將 index 加入 newRowIndexes，用以紀錄更新資料的 index
-    this.newRowIndexes.push(this.newRow.givenIndex);
-    // 將此資料推入 tableData
-    this.tableData.push(this.newRow);
-    // 根據 givenIndex 重排序
-    this.tableData.sort((a, b) => {
-      if (a.givenIndex < b.givenIndex) {
-        return -1; // a 排在 b 前
-      } else if (a.givenIndex > b.givenIndex) {
-        return 1; // b 排在 a 前
-      } else {
-        return 0; // 保持順序
-      }
-    });
-    console.log(this.tableData);
-  }
-
-  /**
-   * 在編輯模式載入下拉式選單資料
-   * @param col
-   * @returns
-   */
-  override loadDropdownData(col: any) {
-    if (col.field === 'stopName') {
-      return this.stops;
-    }
-    return [];
-  }
-
-  /**
-   * 回歸原狀，原先新增的資料全部放棄。
-   */
-  cancelAll() {
-    // 若在編輯模式中取消，呼叫 cancelEdit 方法
-    if (this.mode === 'edit') {
-      this.cancelEdit();
-    }
-    this.deleteList = [];
-    this.mode = '';
-    this.newRow = '';
-    this.newRowIndexes = [];
-    this.selectedData = null;
-    this.selectedIndex = -1;
-    this.editingIndex = -1;
-    this.editingRow = [];
-    this.tableData = this.tableData.filter((data) => data.id !== null);
-  }
-
-  /**
-   * 進行刪除
-   */
-  onStartDelete() {
-    this.mode = 'delete';
-  }
-
-  // 檢查 row 資料是否有未填欄位
-  override checkRowData(selectedData: any): boolean {
-    if (!selectedData.seq || !selectedData.stopName || !selectedData.stopTime) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * 清除表單資料
-   */
-  override clear() {
-    // this.formGroup.reset();
-    this.formGroup.setValue({
-      trainNo: '', // 車次
-    });
-
-    this.tableData = [];
-    this.selectedIndex = -1;
-    this.selectedData = null;
-    this.editingIndex = -1;
-    this.editingRow = null;
-    this.mode = '';
-  }
-
-  /**
-   * 提交資料
-   */
-  override submit() {
-    const requestData: UpdateTrainResource = { ...this.formGroup.value };
-
-    // 停靠站清單
-    const stops: UpdateStopResource[] = this.tableData.map((res) => ({
-      uuid: res.uuid,
-      seq: res.seq,
-      stopName: res.stopName,
-      stopTime: res.stopTime,
-    }));
-
-    requestData.stops = stops;
-    console.log(requestData);
-
-    this.submitted = true;
-    if (
-      !this.submitted ||
-      this.formGroup.invalid ||
-      this.tableData.length === 0 ||
-      this.mode !== ''
-    ) {
-      return;
-    }
-
-    this.trainService
-      .updateTrain(requestData)
-      .pipe(
-        finalize(() => {
-          this.loadingMaskService.hide();
-          this.submitted = false;
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.code === 'VALIDATE_FAILED') {
-            this.messageService.error(res.message);
-          } else {
-            this.messageService.success(res.message);
-          }
-        },
-        error: (err) => {
-          this.messageService.error('發生錯誤，新增失敗', err);
-        },
-      });
   }
 }

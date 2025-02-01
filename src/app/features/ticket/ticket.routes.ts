@@ -4,7 +4,7 @@ import { TrainInfoFormComponent } from './pages/ticket/train-info-form/train-inf
 import { TrainSelectingComponent } from './pages/ticket/train-selecting/train-selectng.component';
 import { TicketDetailComponent } from './pages/ticket/ticket-detail/ticket-detail.component';
 import { BookedSuccessfullyComponent } from './pages/ticket/booked-successfully/booked-successfully.component';
-import { TicketCreatingComponent } from './pages/ticket-creating/ticket-creating.component';
+import { TicketMaintenanceComponent } from './pages/ticket-maintenance/ticket-maintenance.component';
 
 /**
  * 定義 Users 子路由配置的檔案
@@ -32,7 +32,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'create',
-    component: TicketCreatingComponent,
+    path: 'maintenance',
+    component: TicketMaintenanceComponent,
   },
 ];

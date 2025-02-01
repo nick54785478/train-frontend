@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { TrainInfoQueriedResource } from '../models/train-info-queried-resource.model';
-import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
 import { environment } from '../../../../environments/environment';
-import { delay, Subject } from 'rxjs';
-import { TicketBookedResource } from '../models/ticket-booked-resource.model';
+import { BaseResponse } from '../../../shared/models/base-response.model';
 import { BookTicketResource } from '../models/book-ticket-resource.model';
+import { CreateOrUpdateTicketResource } from '../models/create-or-update-ticket-resource.model';
+import { TicketBookedResource } from '../models/ticket-booked-resource.model';
+import { TrainInfoQueriedResource } from '../models/train-info-queried-resource.model';
+import { TicketQueriedResource } from '../models/ticket-queried-resource.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,18 @@ export class TrainTicketService {
   private readonly baseApiUrl = environment.apiEndpoint;
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * 提交新增火車時刻資料
+   * @param requestData
+   */
+  createTicket(
+    trainNo: number,
+    requestData: CreateOrUpdateTicketResource[]
+  ): Observable<BaseResponse> {
+    const url = this.baseApiUrl + '/ticket/' + '' + trainNo;
+    return this.http.post<BaseResponse>(url, requestData);
+  }
 
   /**
    * 查詢符合條件的火車資訊
@@ -56,5 +69,15 @@ export class TrainTicketService {
   bookTicket(request: BookTicketResource): Observable<TicketBookedResource> {
     const url = this.baseApiUrl + '/booking';
     return this.http.post<TicketBookedResource>(url, request);
+  }
+
+  /**
+   * 查詢該車次的車票資訊
+   * @param trainNo
+   * @returns
+   */
+  queryTicketsByTrainNo(trainNo: number): Observable<TicketQueriedResource[]> {
+    const url = this.baseApiUrl + '/ticket/' + '' + trainNo;
+    return this.http.get<TicketQueriedResource[]>(url);
   }
 }

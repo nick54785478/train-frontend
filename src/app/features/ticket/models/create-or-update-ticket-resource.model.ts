@@ -1,5 +1,5 @@
-export class CreateTicketResource {
-  trainNo!: number; // 火車號次
+export class CreateOrUpdateTicketResource {
+  ticketNo!: string;
 
   fromStop!: string; // 起站
 

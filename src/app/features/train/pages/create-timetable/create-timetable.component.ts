@@ -44,7 +44,7 @@ export class CreateTimetableComponent
     super();
   }
   ngDoCheck(): void {
-    this.lineDetailTabs = [
+    this.detailTabs = [
       {
         label: '新增',
         icon: 'pi pi-plus',
@@ -54,12 +54,12 @@ export class CreateTimetableComponent
         disabled: !(this.mode === ''),
       },
       {
-        label: '取消',
+        label: '放棄',
         icon: 'pi pi-times',
         command: () => {
           this.cancelAll();
         },
-        disabled: this.tableData.length === 0,
+        disabled: false,
       },
     ];
     this.detailTabs = [
@@ -93,10 +93,12 @@ export class CreateTimetableComponent
         disabled: !(this.mode === ''),
       },
       {
-        label: '取消',
+        label: '放棄',
         icon: 'pi pi-times',
-        command: () => {},
-        disabled: this.tableData.length === 0,
+        command: () => {
+          this.cancelAll();
+        },
+        disabled: false,
       },
     ];
 
@@ -408,7 +410,6 @@ export class CreateTimetableComponent
    * 回歸原狀，原先新增的資料全部放棄。
    */
   cancelAll() {
-    this.deleteList = [];
     this.mode = '';
     this.newRow = '';
     this.newRowIndexes = [];

@@ -28,7 +28,7 @@ export class TrainService {
   }
 
   /**
-   * 提交新增火車時刻資料
+   * 提交更新火車時刻資料
    * @param requestData
    */
   updateTrain(requestData: UpdateTrainResource): Observable<BaseResponse> {
