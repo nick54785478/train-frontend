@@ -102,5 +102,21 @@
     "labelTw": "票價比率",
     "labelCn": "票价比率",
     "labelUs": "Ticket Price Rate"
+  },
+  {
+    "id": "",
+    "label": "DATA MAPPING",
+    "value": "DATA_MAPPING",
+    "labelTw": "DATA MAPPING",
+    "labelCn": "DATA MAPPING",
+    "labelUs": "DATA MAPPING"
+  },
+  {
+    "id": "",
+    "label": "SHEET NAME",
+    "value": "SHEET_NAME",
+    "labelTw": "SHEET NAME",
+    "labelCn": "SHEET NAME",
+    "labelUs": "SHEET NAME"
   }
 ]
