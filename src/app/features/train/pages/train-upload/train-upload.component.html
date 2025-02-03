@@ -24,7 +24,11 @@
             [auto]="true"
             chooseLabel="Choose"
             maxFileSize="1000000"
+            (uploadHandler)="
+              fileUploadHandler($event, 'fileName', sheetNameOptions)
+            "
           >
+            >
           </p-fileUpload>
           <div *ngIf="formControlInvalid('fileName')">
             <small
@@ -44,7 +48,7 @@
         <div class="col-12 md:col-4 lg:col-4">
           <label class="required"> 工作表 </label>
           <p-dropdown
-            [options]="sheetNames"
+            [options]="sheetNameOptions"
             optionValue="value"
             placeholder="請選擇"
             [showClear]="true"
@@ -64,7 +68,7 @@
           type="button"
           pButton
           label="預覽"
-          (click)="preview()"
+          (click)="preview('sheetName')"
         ></button>
       </div>
       <div class="col-12 md:col-2 lg:col-2">
@@ -83,6 +87,6 @@
 <ng-container *ngIf="showPreview">
   <p-panel header="內容預覽">
     預覽內容僅顯示選定工作表的前 {{ maxRow }} 筆資料
-    <div #spreadsheet class="bpaas-jexcel-container"></div>
+    <div #spreadsheet class="jexcel-container"></div>
   </p-panel>
 </ng-container>

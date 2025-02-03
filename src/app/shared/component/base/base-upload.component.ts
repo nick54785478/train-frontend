@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import * as jspreadsheet from 'jspreadsheet-ce';
 import { FileUpload } from 'primeng/fileupload';
+import { ExcelData } from '../../models/excel-data.model';
 
 /**
  * 定義基礎的 Form 表單 Component
@@ -117,4 +118,19 @@ export abstract class BaseUploadCompoent {
       return false;
     }
   }
+
+  /**
+   * 檔案解析後需要做的事。通常是
+   * (1) 設定檔案名稱到畫面欄位
+   * (2) 設定下拉選單的清單
+   * (3) 設定頁籤下拉選單選定第一個頁籤
+   */
+  abstract afterFileParseSuccess(result: ExcelData): void;
+
+  /**
+   * 檔案解析後需要做的事。通常是
+   * (1) 清除畫面欄位的檔案名稱
+   * (2) 清除下拉選單的清單
+   */
+  abstract afterFileParseFail(): void;
 }
