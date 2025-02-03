@@ -43,4 +43,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./setting/setting.module').then((m) => m.SettingModule),
   },
+  {
+    path: 'upload',
+    loadChildren: () =>
+      import('./upload/upload.module').then((m) => m.UploadModule),
+  },
 ];

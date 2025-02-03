@@ -32,6 +32,14 @@
   }, 
   {
     "id": "",
+    "label": "Excel 上傳車次資料",
+    "icon": "",
+    "url": "/train/upload",
+    "routerLink": "/train/upload",
+    "visible": true
+  },
+  {
+    "id": "",
     "label": "車票資訊維護",
     "icon": "",
     "url": "/ticket/maintenance",
@@ -52,6 +60,14 @@
     "icon": "",
     "url": "/ticket",
     "routerLink": "/ticket",
+    "visible": true
+  },
+  {
+    "id": "",
+    "label": "範本維護",
+    "icon": "",
+    "url": "/upload",
+    "routerLink": "/upload",
     "visible": true
   },
   {
