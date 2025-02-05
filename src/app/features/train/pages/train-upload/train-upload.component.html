@@ -83,10 +83,9 @@
     </div>
   </p-panel>
 </form>
-
 <ng-container *ngIf="showPreview">
   <p-panel header="內容預覽">
     預覽內容僅顯示選定工作表的前 {{ maxRow }} 筆資料
-    <div #spreadsheet class="jexcel-container"></div>
+    <div #spreadsheet class="spreadsheet-container"></div>
   </p-panel>
 </ng-container>

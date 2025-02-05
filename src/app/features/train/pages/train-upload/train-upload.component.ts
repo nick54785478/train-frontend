@@ -1,17 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import * as XLSX from 'xlsx';
 import { SharedModule } from '../../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
 import { BaseFormCompoent } from '../../../../shared/component/base/base-form.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseUploadCompoent } from '../../../../shared/component/base/base-upload.component';
-import { SystemMessageService } from '../../../../core/services/system-message.service';
-import jspreadsheet from 'jspreadsheet-ce';
-import { JspreadsheetWrapper } from '../../../../shared/wrapper/jspreadsheet-wrapper';
-import { ExcelFileReaderService } from '../../../../shared/services/excel-file-reader.service';
-import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
-import { Option } from '../../../../shared/models/option.model';
 import { ExcelData } from '../../../../shared/models/excel-data.model';
+import { FileUpload } from 'primeng/fileupload';
+import { Option } from '../../../../shared/models/option.model';
+import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
+import { SystemMessageService } from '../../../../core/services/system-message.service';
+import { ExcelFileReaderService } from '../../../../shared/services/excel-file-reader.service';
+import { JspreadsheetWrapper } from '../../../../shared/wrapper/jspreadsheet-wrapper';
+import jspreadsheet from 'jspreadsheet-ce';
 
 @Component({
   selector: 'app-train-upload',
@@ -29,22 +37,10 @@ export class TrainUploadComponent
 
   spreadsheet: any;
 
-  constructor(
-    private messageService: SystemMessageService,
-    private loadingMaskService: LoadingMaskService,
-    public excelFileReaderService: ExcelFileReaderService
-  ) {
+  constructor() {
     super();
   }
 
-  ngAfterViewInit(): void {
-    // if (this.spreadsheetContainer?.nativeElement && !this.spreadsheet) {
-    //   console.log(
-    //     '✅ spreadsheetContainer is now available, initializing jSpreadsheet...'
-    //   );
-    //   this.preview(this.formControl('sheetName').value);
-    // }
-  }
   ngOnInit(): void {
     this.formGroup = new FormGroup({
       fileName: new FormControl('', [Validators.required]),
@@ -52,70 +48,39 @@ export class TrainUploadComponent
     });
   }
 
-  preview(sheetNameFormControlName: string) {
-    this.showPreview = true;
-
-    console.log('preview');
-
-    // 清除檔案預覽
-    this.destroyJExcel();
-
-    if (!sheetNameFormControlName) {
-      return;
-    }
-
-    this.showPreview = true;
-
-    // 建立 jspreadsheet.JSpreadsheetOptions 物件
-    const options: jspreadsheet.JSpreadsheetOptions = {};
-
-    // 把 XLSX.WorkBook 轉成網頁表格 Jspreadsheet CE 的設定 Options
-    const jspreadsheetOptions =
-      JspreadsheetWrapper.convertWorkbookToJspreadsheetOptions(
-        this.workbook!,
-        this.formControl(sheetNameFormControlName).getRawValue(), // 要查詢哪一個頁籤的資料
-        this.maxRow,
-        this.maxColumn
-      );
-
-    // 使用 setTimeout 函式將 jexcel 的初始化延遲到下一個JavaScript事件迴圈。
-    // 請注意，使用setTimeout的方式可能不是最佳解決方案，但在某些情況下可能能解決異步操作所導致的問題。
+  override ngAfterViewInit(): void {
     setTimeout(() => {
-      // 創建一個新的預覽表格
-      this.jexcel = jspreadsheet(
-        this.spreadsheetContainer.nativeElement,
-        jspreadsheetOptions
-      );
-      if (this.jexcel) {
-        // 把滑鼠右鍵的選單全移除
-        this.jexcel.contextMenu.remove();
-      }
-    }, 0);
-  }
-
-  override afterFileParseSuccess(result: ExcelData): void {
-    // 設定 sheetname 下拉選單
-    this.sheetNameOptions = result.sheetNameOptions;
-
-    this.formGroup.patchValue({
-      fileName: result.fileName,
-      sheetName: result.sheetNameOptions[0].value,
+      console.log(this.spreadsheetContainer); // 確保 `ViewChild` 存在
     });
   }
-  override afterFileParseFail(): void {
-    this.sheetNameOptions = [];
-    this.formControl('fileName').reset();
-    this.formControl('sheetName').reset();
-  }
-
-  upload() {}
 
   /**
-   * 清除檔案預覽
+   * Patch FormGroup 的值
+   * @param data
    */
-  destroyJExcel(): void {
-    this.showPreview = false;
-    this.jexcel?.destroy();
+  override patchFormGroupValue(data?: any) {}
+
+  /**
+   * 取得 FormControl。
+   * @param formControlName formControlNameformControl 的名稱
+   * @returns FormControl
+   */
+  override formControl(formControlName: string): FormControl {
+    return this.formGroup.get(formControlName) as FormControl;
+  }
+
+  /**
+   * 判斷 formControl 欄位是否有錯誤。
+   * @param formControlName formControl 的名稱
+   * @returns boolean 欄位是否有錯誤
+   */
+  override formControlInvalid(formControlName: string): boolean {
+    const formControl = this.formGroup.get(formControlName);
+    if (formControl) {
+      return formControl.invalid && (formControl.dirty || this.submitted);
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -124,7 +89,7 @@ export class TrainUploadComponent
    * @param fileNameFormControlName
    * @returns
    */
-  fileUploadHandler(
+  override fileUploadHandler(
     event: any,
     fileNameFormControlName: string,
     sheetNameOptions: Option[]
@@ -175,5 +140,78 @@ export class TrainUploadComponent
         this.fileUploadComponent.clear();
         this.loadingMaskService.hide();
       });
+  }
+
+  /**
+   * 清除檔案預覽
+   */
+  override destroyJExcel(): void {
+    this.showPreview = false;
+    this.jexcel?.destroy();
+  }
+
+  afterFileParseSuccess(result: ExcelData): void {
+    // 設定 sheetname 下拉選單
+    this.sheetNameOptions = result.sheetNameOptions;
+
+    this.formGroup.patchValue({
+      fileName: result.fileName,
+      sheetName: result.sheetNameOptions[0].value,
+    });
+  }
+
+  afterFileParseFail(): void {
+    this.sheetNameOptions = [];
+    this.formControl('fileName').reset();
+    this.formControl('sheetName').reset();
+  }
+
+  upload() {}
+
+  /**
+   * 預覽功能
+   * @param sheetNameFormControlName
+   * @returns
+   */
+  override preview(sheetNameFormControlName: string) {
+    console.log('preview');
+
+    // 清除檔案預覽
+    this.destroyJExcel();
+
+    if (!sheetNameFormControlName) {
+      return;
+    }
+
+    this.showPreview = true;
+
+    // 建立 jspreadsheet.JSpreadsheetOptions 物件
+    const options: jspreadsheet.JSpreadsheetOptions = {};
+
+    // 把 XLSX.WorkBook 轉成網頁表格 Jspreadsheet CE 的設定 Options
+    const jspreadsheetOptions =
+      JspreadsheetWrapper.convertWorkbookToJspreadsheetOptions(
+        this.workbook!,
+        this.formControl(sheetNameFormControlName).getRawValue(), // 要查詢哪一個頁籤的資料
+        this.maxRow,
+        this.maxColumn
+      );
+
+    // 使用 setTimeout 函式將 jexcel 的初始化延遲到下一個JavaScript事件迴圈。
+    // 請注意，使用setTimeout的方式可能不是最佳解決方案，但在某些情況下可能能解決異步操作所導致的問題。
+    setTimeout(() => {
+      console.log(this.spreadsheetContainer);
+
+      // 創建一個新的預覽表格
+      this.jexcel = jspreadsheet(
+        this.spreadsheetContainer.nativeElement,
+        jspreadsheetOptions
+      );
+
+      if (this.jexcel) {
+        // 把滑鼠右鍵的選單全移除
+        this.jexcel.contextMenu.remove();
+      }
+    }, 100);
   }
 }
