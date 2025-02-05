@@ -63,7 +63,7 @@ export class RegisterComponent extends BaseFormCompoent implements OnInit {
           )
           .subscribe({
             next: (res) => {
-              if (res.code === 'VALIDATION_FAILED' && res.message) {
+              if (res.code === 'VALIDATE_FAILED' && res.message) {
                 this.systemMessageService.error(res.message);
               } else {
                 this.systemMessageService.success(

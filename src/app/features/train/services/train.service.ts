@@ -92,4 +92,14 @@ export class TrainService {
     const url = this.baseApiUrl + '/train/' + trainNo + '/stops';
     return this.http.get<TrainQueriedResource>(url);
   }
+
+  /**
+   * 進行 Excel 資料上傳
+   * @param formData
+   * @returns
+   */
+  upload(formData: FormData): Observable<BaseResponse> {
+    const url = this.baseApiUrl + '/train/upload';
+    return this.http.post<BaseResponse>(url, formData);
+  }
 }

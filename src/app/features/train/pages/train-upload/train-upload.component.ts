@@ -20,12 +20,15 @@ import { SystemMessageService } from '../../../../core/services/system-message.s
 import { ExcelFileReaderService } from '../../../../shared/services/excel-file-reader.service';
 import { JspreadsheetWrapper } from '../../../../shared/wrapper/jspreadsheet-wrapper';
 import jspreadsheet from 'jspreadsheet-ce';
+import { TrainService } from '../../services/train.service';
+import { finalize } from 'rxjs';
+import { error } from 'console';
 
 @Component({
   selector: 'app-train-upload',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [],
+  providers: [SystemMessageService, LoadingMaskService],
   templateUrl: './train-upload.component.html',
   styleUrl: './train-upload.component.scss',
 })
@@ -37,7 +40,7 @@ export class TrainUploadComponent
 
   spreadsheet: any;
 
-  constructor() {
+  constructor(private trainService: TrainService) {
     super();
   }
 
@@ -45,12 +48,6 @@ export class TrainUploadComponent
     this.formGroup = new FormGroup({
       fileName: new FormControl('', [Validators.required]),
       sheetName: new FormControl('', Validators.required),
-    });
-  }
-
-  override ngAfterViewInit(): void {
-    setTimeout(() => {
-      console.log(this.spreadsheetContainer); // 確保 `ViewChild` 存在
     });
   }
 
@@ -91,11 +88,8 @@ export class TrainUploadComponent
    */
   override fileUploadHandler(
     event: any,
-    fileNameFormControlName: string,
-    sheetNameOptions: Option[]
+    fileNameFormControlName: string
   ): void {
-    console.log('fileUploadHandler');
-
     // 清除檔案預覽
     this.destroyJExcel();
 
@@ -113,7 +107,7 @@ export class TrainUploadComponent
       this.formControl(fileNameFormControlName).patchValue(
         this.selectedFile.name
       );
-      sheetNameOptions = [];
+      // sheetNameOptions = [];
       this.formControl(fileNameFormControlName).markAsDirty();
       // 清除檔案選取元件內容，不然不能重選檔案
       this.fileUploadComponent.clear();
@@ -150,6 +144,10 @@ export class TrainUploadComponent
     this.jexcel?.destroy();
   }
 
+  /**
+   * Parse Excel 成功後的處理
+   * @param result: Excel Data
+   */
   afterFileParseSuccess(result: ExcelData): void {
     // 設定 sheetname 下拉選單
     this.sheetNameOptions = result.sheetNameOptions;
@@ -160,13 +158,87 @@ export class TrainUploadComponent
     });
   }
 
+  /**
+   * Parse Excel 失敗後的處理，重置上方表單內容
+   */
   afterFileParseFail(): void {
     this.sheetNameOptions = [];
     this.formControl('fileName').reset();
     this.formControl('sheetName').reset();
   }
 
-  upload() {}
+  /**
+   * 上傳資料
+   */
+  upload() {
+    this.submitted = true;
+    if (!this.submitted || !this.workbook) {
+      return;
+    }
+
+    console.log('workbook = ' + JSON.stringify(this.workbook));
+    // 轉成 Blob
+    const excelBuffer: any = XLSX.write(this.workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const blob: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    // 轉成 File
+    const file = new File([blob], 'data.xlsx', {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    const formData = new FormData();
+    this.loadingMaskService.show();
+    formData.append('file', file);
+    formData.append('mapping', 'TRAIN_MAPPING');
+    formData.append('sheetMapping', 'TRAIN_SHEET_NAME');
+    this.trainService
+      .upload(formData)
+      .pipe(
+        finalize(() => {
+          this.loadingMaskService.hide();
+          this.submitted = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED' && res.message) {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success(res.message);
+          }
+        },
+        error: (error) => {
+          this.messageService.error(error.message);
+        },
+      });
+  }
+
+  // // 選擇檔案
+  // onFileSelected(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     const data = new Uint8Array(e.target.result);
+  //     const workbook = XLSX.read(data, { type: 'array' });
+
+  //     // 取得第一張工作表
+  //     const sheetName = workbook.SheetNames[0];
+  //     const worksheet = workbook.Sheets[sheetName];
+
+  //     // 轉換為 JSON
+  //     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  //     console.log('解析結果:', jsonData);
+  //   };
+
+  //   reader.readAsArrayBuffer(file);
+  // }
 
   /**
    * 預覽功能
@@ -174,8 +246,6 @@ export class TrainUploadComponent
    * @returns
    */
   override preview(sheetNameFormControlName: string) {
-    console.log('preview');
-
     // 清除檔案預覽
     this.destroyJExcel();
 
@@ -197,7 +267,6 @@ export class TrainUploadComponent
         this.maxColumn
       );
 
-    // 使用 setTimeout 函式將 jexcel 的初始化延遲到下一個JavaScript事件迴圈。
     // 請注意，使用setTimeout的方式可能不是最佳解決方案，但在某些情況下可能能解決異步操作所導致的問題。
     setTimeout(() => {
       console.log(this.spreadsheetContainer);

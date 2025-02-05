@@ -6,8 +6,6 @@ export class JspreadsheetWrapper {
 
   constructor(jspreadsheetInstance: Jspreadsheet.JspreadsheetInstance) {
     this.jspreadsheet = jspreadsheetInstance;
-    // 原本程式在這裡面會寫監聽滑鼠事件，根據滑鼠操作來控制 jExcel 表格的選擇和多重選擇功能。
-    // 目前主要先寫預覽功能，後續有表格選取的功能再來實做
   }
 
   /**

@@ -33,7 +33,7 @@ import { CoreModule } from '../../../core/core.module';
   selector: 'app-base-form-compoent',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [],
+  providers: [LoadingMaskService, SystemMessageService],
   template: '',
 })
 export abstract class BaseUploadCompoent implements AfterViewInit {
@@ -41,6 +41,9 @@ export abstract class BaseUploadCompoent implements AfterViewInit {
   protected loadingMaskService = inject(LoadingMaskService);
   protected messageService = inject(SystemMessageService);
   protected excelFileReaderService = inject(ExcelFileReaderService);
+
+  constructor() {}
+
   /**
    * 選取的檔案。
    */
@@ -113,11 +116,10 @@ export abstract class BaseUploadCompoent implements AfterViewInit {
    */
   protected formAction!: string;
 
-  constructor() {}
-
   ngAfterViewInit(): void {
+    // 使用 setTimeout 函式將 jexcel 初始化，確保 `ViewChild` 存在。
     setTimeout(() => {
-      console.log(this.spreadsheetContainer); // 確保 `ViewChild` 存在
+      console.log(this.spreadsheetContainer); // 確保 `ViewChild` 存在。
     });
   }
 

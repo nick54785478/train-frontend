@@ -24,9 +24,7 @@
             [auto]="true"
             chooseLabel="Choose"
             maxFileSize="1000000"
-            (uploadHandler)="
-              fileUploadHandler($event, 'fileName', sheetNameOptions)
-            "
+            (uploadHandler)="fileUploadHandler($event, 'fileName')"
           >
             >
           </p-fileUpload>
