@@ -19,7 +19,7 @@ import { DialogFormComponent } from '../../../../shared/component/dialog-form/di
 import { FormAction } from '../../../../core/enums/form-action.enum';
 import { SettingFormComponent } from './setting-form/setting-form.component';
 import { DialogConfirmService } from '../../../../core/services/dialog-confirm.service';
-import { SettingType } from '../../../../core/enums/setting-type.enum';
+import { DataType } from '../../../../core/enums/data-type.enum';
 
 @Component({
   selector: 'app-setting',
@@ -89,7 +89,7 @@ export class SettingComponent implements OnInit, OnDestroy {
       this.dataTypes = res;
     });
     // 取得 activeFlag 下拉資料
-    this.optionService.getSettingTypes(SettingType.YES_NO).subscribe((res) => {
+    this.optionService.getSettingTypes(DataType.YES_NO).subscribe((res) => {
       this.activeFlags = res;
     });
 

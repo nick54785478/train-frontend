@@ -17,9 +17,9 @@ import { SystemMessageService } from '../../../../../core/services/system-messag
 import { TrainInfoSelectedResource } from '../../../models/train-info-selected-resource.model';
 import { OptionService } from '../../../../../shared/services/option.service';
 import { Option } from '../../../../../shared/models/option.model';
-import { SettingType } from '../../../../../core/enums/setting-type.enum';
 import { StorageService } from '../../../../../core/services/storage.service';
 import { StepQueryKey } from '../../../../../core/enums/step-query-key.enum copy';
+import { DataType } from '../../../../../core/enums/data-type.enum';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -48,11 +48,9 @@ export class TicketDetailComponent
     super();
   }
   async ngOnInit(): Promise<void> {
-    this.optionService
-      .getSettingTypes(SettingType.PAY_METHOD)
-      .subscribe((res) => {
-        this.payMethods = res;
-      });
+    this.optionService.getSettingTypes(DataType.PAY_METHOD).subscribe((res) => {
+      this.payMethods = res;
+    });
 
     // 初始化表單
     this.formGroup = new FormGroup({

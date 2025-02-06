@@ -1,28 +1,17 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { SharedModule } from '../../../../shared/shared.module';
 import { CoreModule } from '../../../../core/core.module';
-import { BaseFormCompoent } from '../../../../shared/component/base/base-form.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseUploadCompoent } from '../../../../shared/component/base/base-upload.component';
 import { ExcelData } from '../../../../shared/models/excel-data.model';
-import { FileUpload } from 'primeng/fileupload';
-import { Option } from '../../../../shared/models/option.model';
 import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
-import { ExcelFileReaderService } from '../../../../shared/services/excel-file-reader.service';
 import { JspreadsheetWrapper } from '../../../../shared/wrapper/jspreadsheet-wrapper';
 import jspreadsheet from 'jspreadsheet-ce';
 import { TrainService } from '../../services/train.service';
 import { finalize } from 'rxjs';
-import { error } from 'console';
 
 @Component({
   selector: 'app-train-upload',
@@ -47,7 +36,7 @@ export class TrainUploadComponent
   ngOnInit(): void {
     this.formGroup = new FormGroup({
       fileName: new FormControl('', [Validators.required]),
-      sheetName: new FormControl('', Validators.required),
+      sheetName: new FormControl('', [Validators.required]),
     });
   }
 

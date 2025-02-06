@@ -11,11 +11,8 @@ import { MenuItem } from 'primeng/api';
 import { Subject } from 'rxjs/internal/Subject';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Option } from '../../../../shared/models/option.model';
-import { SettingType } from '../../../../core/enums/setting-type.enum';
-import { TrainSeatService } from '../../../ticket/services/train-seat.service';
 import { TrainService } from '../../services/train.service';
 import { finalize } from 'rxjs/internal/operators/finalize';
-import { TrainKind } from '../../../../core/enums/train-kind.enum copy';
 import { DataType } from '../../../../core/enums/data-type.enum';
 import {
   UpdateStopResource,
@@ -60,7 +57,7 @@ export class TrainMaintenanceComponent
       trainNo: new FormControl('', [Validators.required]),
     });
 
-    this.optionService.getSettingTypes(SettingType.STOP_KIND).subscribe({
+    this.optionService.getSettingTypes(DataType.STOP_KIND).subscribe({
       next: (res) => {
         console.log(res);
         this.stops = res;

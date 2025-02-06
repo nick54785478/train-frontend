@@ -13,8 +13,8 @@ import { BaseFormCompoent } from '../../../../../shared/component/base/base-form
 import { finalize } from 'rxjs';
 import { SettingQueried } from '../../../models/setting-query.model';
 import { UpdateSetting } from '../../../models/update-setting-request.model';
-import { SettingType } from '../../../../../core/enums/setting-type.enum';
 import { Location } from '@angular/common';
+import { DataType } from '../../../../../core/enums/data-type.enum';
 
 @Component({
   selector: 'app-setting-form',
@@ -73,7 +73,7 @@ export class SettingFormComponent
     });
 
     // 取得 activeFlag 下拉資料
-    this.optionService.getSettingTypes(SettingType.YES_NO).subscribe((res) => {
+    this.optionService.getSettingTypes(DataType.YES_NO).subscribe((res) => {
       this.activeFlags = res;
     });
   }

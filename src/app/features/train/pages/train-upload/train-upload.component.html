@@ -12,6 +12,20 @@
             formControlName="fileName"
             readonly="true"
           />
+          <div *ngIf="formControlInvalid('fileName')">
+            <small
+              class="p-error"
+              *ngIf="formControl('fileName').errors?.['required']"
+            >
+              此資料不能為空
+            </small>
+            <small
+              class="p-error"
+              *ngIf="formControl('fileName').errors?.['invalidFileSize']"
+            >
+              此欄位必須小於 10 MB
+            </small>
+          </div>
         </div>
         <div class="col-12 md:col-3 lg:col-3">
           <p-fileUpload
@@ -28,20 +42,6 @@
           >
             >
           </p-fileUpload>
-          <div *ngIf="formControlInvalid('fileName')">
-            <small
-              class="p-error"
-              *ngIf="formControl('fileName').errors?.['required']"
-            >
-              此資料不能為空
-            </small>
-            <small
-              class="p-error"
-              *ngIf="formControl('fileName').errors?.['invalidFileSize']"
-            >
-              此欄位必須小於 10 MB
-            </small>
-          </div>
         </div>
         <div class="col-12 md:col-4 lg:col-4">
           <label class="required"> 工作表 </label>

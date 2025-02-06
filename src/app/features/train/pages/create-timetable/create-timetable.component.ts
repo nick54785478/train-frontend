@@ -8,8 +8,6 @@ import { Option } from '../../../../shared/models/option.model';
 import { OptionService } from '../../../../shared/services/option.service';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
 import { MenuItem } from 'primeng/api';
-import { SettingService } from '../../../setting/service/setting.service';
-import { SettingType } from '../../../../core/enums/setting-type.enum';
 import { TrainService } from '../../services/train.service';
 import {
   CreateStopResource,
@@ -17,6 +15,7 @@ import {
 } from '../../models/create-train-resource.model';
 import { finalize } from 'rxjs';
 import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
+import { DataType } from '../../../../core/enums/data-type.enum';
 
 @Component({
   selector: 'app-create-timetable',
@@ -142,7 +141,7 @@ export class CreateTimetableComponent
       },
     });
 
-    this.optionService.getSettingTypes(SettingType.STOP_KIND).subscribe({
+    this.optionService.getSettingTypes(DataType.STOP_KIND).subscribe({
       next: (res) => {
         console.log(res);
         this.stopKinds = res;

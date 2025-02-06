@@ -118,5 +118,13 @@
     "labelTw": "SHEET NAME",
     "labelCn": "SHEET NAME",
     "labelUs": "SHEET NAME"
+  },
+  {
+    "id": "",
+    "label": "範本設定",
+    "value": "TEMPLATE",
+    "labelTw": "TEMPLATE",
+    "labelCn": "SHEET NAME",
+    "labelUs": "范本"
   }
 ]

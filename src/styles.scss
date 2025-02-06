@@ -46,3 +46,9 @@
   animation: p-progress-spinner-dash 1.5s ease-in-out infinite,
     custom-progress-spinner-color 6s ease-in-out infinite;
 }
+
+.spreadsheet-container {
+  width: 100%;
+  min-height: 400px;
+  overflow: auto;
+}

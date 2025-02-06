@@ -31,7 +31,7 @@ export class OptionService {
 
   /**
    * 取得 Setting Type 種類
-   * @param type
+   * @param type DataType
    * @return  Observable<Option[]>
    */
   public getSettingTypes(type: string): Observable<Option[]> {
