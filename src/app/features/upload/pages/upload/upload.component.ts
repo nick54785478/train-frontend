@@ -60,10 +60,12 @@ export class UploadComponent
   }
 
   async ngOnInit(): Promise<void> {
+    // 上方查詢用表單
     this.formGroup = new FormGroup({
       templateType: new FormControl('', [Validators.required]),
     });
 
+    // 下方 Form 表單
     this.templateForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       templateType: new FormControl('', [Validators.required]),
@@ -119,7 +121,11 @@ export class UploadComponent
           if (!res) {
             this.templateForm.reset();
             this.templateForm.patchValue({
-              templateType: formData.templateType,
+              name: formData.templateType,
+              templateType:
+                TemplateType[
+                  formData.templateType as keyof typeof TemplateType
+                ],
             });
           } else {
             this.templateForm.patchValue({
@@ -309,10 +315,51 @@ export class UploadComponent
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
 
+    let templateData = this.templateForm.value;
+    // 範例: /home/user/documents/report.xlsx
+    const parts = templateData.filePath.split('/');
+    const fullFileName = parts.pop() || ''; // report.xlsx
+    const middlePath = parts.join('/'); // /home/user/documents
+    const [fileName, fileType] = fullFileName.split('.'); // xlsx
+
+    const resource = {
+      name: templateData.name,
+      type: templateData.templateType,
+      fileType: fileType,
+      filePath: middlePath,
+      fileName: fullFileName,
+    };
+    console.log(resource);
+
     const formData = new FormData();
-    this.loadingMaskService.show();
+    // 轉換 JSON 為 Blob 並加入 FormData
+    formData.append(
+      'resource',
+      new Blob([JSON.stringify(resource)], { type: 'application/json' })
+    );
     formData.append('file', file);
-    formData.append('mapping', 'TRAIN_MAPPING');
-    formData.append('sheetMapping', 'TRAIN_SHEET_NAME');
+
+    this.loadingMaskService.show();
+
+    this.templateUploadService
+      .upload(formData)
+      .pipe(
+        finalize(() => {
+          this.loadingMaskService.hide();
+          this.submitted = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED' && res.message) {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success(res.message);
+          }
+        },
+        error: (error) => {
+          this.messageService.error(error);
+        },
+      });
   }
 }

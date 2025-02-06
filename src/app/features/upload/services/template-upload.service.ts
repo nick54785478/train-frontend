@@ -3,6 +3,8 @@ import { TemplateQueriedResource } from '../models/template-queried-resource.mod
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { UploadTemplateResource } from '../models/template-upload-resource.model';
+import { BaseResponse } from '../../../shared/models/base-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,5 +23,15 @@ export class TemplateUploadService {
     const url = this.baseApiUrl + '/template';
     let params = new HttpParams().set('type', type);
     return this.http.get<TemplateQueriedResource>(url, { params });
+  }
+
+  /**
+   * 進行上傳
+   * @param formData
+   * @returns
+   */
+  upload(formData: FormData): Observable<BaseResponse> {
+    const url = this.baseApiUrl + '/template/upload';
+    return this.http.post<BaseResponse>(url, formData);
   }
 }

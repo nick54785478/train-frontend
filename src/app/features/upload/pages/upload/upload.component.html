@@ -51,12 +51,12 @@
     <form [formGroup]="templateForm">
       <div class="grid p-fluid">
         <div class="col-12 md:col-3 lg:col-3">
-          <label>範本名稱</label>
+          <label>Code</label>
           <input
             type="text"
             pInputText
             formControlName="name"
-            [readOnly]="true"
+            [readonly]="true"
           />
           <div *ngIf="templateFormControlInvalid('name')">
             <small
@@ -68,24 +68,19 @@
           </div>
         </div>
         <div class="col-12 md:col-3 lg:col-3">
-          <label>範本種類</label>
+          <label>Label</label>
           <input
             type="text"
             pInputText
             formControlName="templateType"
-            [readOnly]="true"
+            [readonly]="true"
           />
         </div>
       </div>
       <div class="grid p-fluid">
         <div class="col-12 md:col-5 lg:col-5">
-          <label>檔案位置</label>
-          <input
-            type="text"
-            pInputText
-            formControlName="filePath"
-            [readOnly]="true"
-          />
+          <label>檔案位置(格式: filePath + '/'+ fileNmae)</label>
+          <input type="text" pInputText formControlName="filePath" />
           <div *ngIf="templateFormControlInvalid('filePath')">
             <small
               class="p-error"
@@ -100,12 +95,7 @@
         <div class="col-12 md:col-3 lg:col-3">
           <label class="required">最大允許檔案大小 10 MB</label>
           <!-- <div class="p-inputgroup"> -->
-          <input
-            type="text"
-            pInputText
-            formControlName="fileName"
-            readonly="true"
-          />
+          <input type="text" pInputText formControlName="fileName" />
           <div *ngIf="templateFormControlInvalid('fileName')">
             <small
               class="p-error"
