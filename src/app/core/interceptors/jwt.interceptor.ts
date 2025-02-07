@@ -59,7 +59,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
               );
             },
             error: (err) => {
-              console.log(err);
+              console.log('刷新失敗', err);
             },
           });
         }
@@ -77,6 +77,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       // 繼續處理請求
       return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+          console.log(error);
           if (error.status === 500) {
             console.error('伺服器錯誤:', error.message);
           } else if (error.status === 401) {
