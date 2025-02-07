@@ -7,11 +7,10 @@ import { ExcelData } from '../models/excel-data.model';
  * 讀取 Excel 並透過 SheetJS CE (XLSX) 進行轉換的服務。
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExcelFileReaderService {
-
-  constructor() { }
+  constructor() {}
 
   /**
    * 驗證檔案是否超過大小上限
@@ -20,7 +19,7 @@ export class ExcelFileReaderService {
    * @returns 是否超過大小上限
    */
   fileSizeInvalid(file: File, maxFileSize: number): boolean {
-    return file.size > maxFileSize *1024 * 1024;
+    return file.size > maxFileSize * 1024 * 1024;
   }
 
   /**
@@ -32,7 +31,7 @@ export class ExcelFileReaderService {
   parseFile(file: File, maxRow: number = 50): Promise<ExcelData> {
     return new Promise((resolve, reject) => {
       // 判斷是否為 csv 檔
-      const isCSV = file.name.split(".").reverse()[0] == 'csv';
+      const isCSV = file.name.split('.').reverse()[0] == 'csv';
 
       const reader = new FileReader();
       reader.onloadstart = function (e) {
@@ -46,7 +45,9 @@ export class ExcelFileReaderService {
         if (isCSV) {
           // 只有 csv 特別處理，只判斷 big5 且用 � 來判斷真的是不得已的
           // 有時間再來找比較正確的解法，先延續其他專案的判斷方式
-          const big5String = new TextDecoder('big5').decode(new Uint8Array(fileContent));
+          const big5String = new TextDecoder('big5').decode(
+            new Uint8Array(fileContent)
+          );
           console.log('big5String = ' + big5String);
           const isBig5 = big5String.indexOf('�') === -1;
           xlsxData = big5String;
@@ -54,25 +55,25 @@ export class ExcelFileReaderService {
 
         try {
           // 把檔案透過 xlsx 轉出成 workbook 的 JSON 資料
-          const workbook = XLSX.read(xlsxData,
-            {
-              type: 'binary',
-              cellStyles: true,
-              sheetRows: maxRow
-            }
-          );
+          const workbook = XLSX.read(xlsxData, {
+            type: 'binary',
+            cellStyles: true,
+            sheetRows: maxRow,
+          });
           console.log('workbook = ' + JSON.stringify(workbook));
 
           // 設定 SheetName 下拉選單，從 SheetNames 裡面取，id 和 value 都存 sheetName 在 SheetNames 裡的 index
-          const sheetNameOptions: Option[] = workbook.SheetNames.map((name: string, index: number) => {
-            return { id: index.toString(), value: name, label: name };
-          });
+          const sheetNameOptions: Option[] = workbook.SheetNames.map(
+            (name: string, index: number) => {
+              return { id: index.toString(), value: name, label: name };
+            }
+          );
 
           resolve({
-            uploadFile:file,
+            uploadFile: file,
             fileName: file.name,
             workBook: workbook,
-            sheetNameOptions: sheetNameOptions
+            sheetNameOptions: sheetNameOptions,
           });
         } catch (error) {
           reject(error);
@@ -93,5 +94,20 @@ export class ExcelFileReaderService {
         reader.readAsBinaryString(file);
       }
     });
+  }
+
+  /**
+   * 取得檔案名稱
+   * @param contentDisposition Header
+   * */
+  getFileName(contentDisposition: any): string {
+    console.log(contentDisposition);
+    let filename = 'FileName';
+    const regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = regex.exec(contentDisposition);
+    if (matches != null && matches[1]) {
+      filename = matches[1];
+    }
+    return filename;
   }
 }

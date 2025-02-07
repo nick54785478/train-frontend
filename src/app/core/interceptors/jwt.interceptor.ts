@@ -1,10 +1,12 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
-import { catchError, EMPTY, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, switchMap, tap, throwError } from 'rxjs';
 import { LoginService } from '../../features/layout/services/login.service';
 import { StorageService } from '../services/storage.service';
 import { SystemStorageKey } from '../enums/system-storage.enum';
+import { Router } from '@angular/router';
+import { SystemMessageService } from '../services/system-message.service';
 
 /**
  * JWT 攔截器
@@ -12,6 +14,8 @@ import { SystemStorageKey } from '../enums/system-storage.enum';
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const storageService = inject(StorageService);
+  const router = inject(Router);
+  const messageService = inject(SystemMessageService);
 
   // return next(req);
   console.log('攔截請求' + req.url);
@@ -72,11 +76,18 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
       // 繼續處理請求
       return next(req).pipe(
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           if (error.status === 500) {
             console.error('伺服器錯誤:', error.message);
-            // 根據需要通知用戶
+          } else if (error.status === 401) {
+            messageService.error('JWT 過期，重新導向至登入頁');
+            setTimeout(() => {
+              console.warn('JWT 過期，重新導向至登入頁');
+              localStorage.removeItem('token'); // 清除過期 Token
+              router.navigate(['/login']); // 導向登入頁
+            }, 1000);
           } else {
+            // 根據需要通知用戶
             console.error('其他錯誤:', error.message);
           }
 

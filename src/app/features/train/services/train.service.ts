@@ -9,6 +9,7 @@ import { TrainSummaryQueriedResource } from '../models/train-summary-queried-res
 import { StopDetailQueriedResource } from '../models/stop-detail-queried-resource.model';
 import { TrainQueriedResource } from '../models/train-queried-resource.model';
 import { UpdateTrainResource } from '../models/update-train-resource.model';
+import { map } from 'rxjs/internal/operators/map';
 
 @Injectable({
   providedIn: 'root',
@@ -101,5 +102,39 @@ export class TrainService {
   upload(formData: FormData): Observable<BaseResponse> {
     const url = this.baseApiUrl + '/train/upload';
     return this.http.post<BaseResponse>(url, formData);
+  }
+
+  downloadTemplate(type: string): Observable<any> {
+    const url = this.baseApiUrl + '/template/download';
+    let params = new HttpParams().set('type', type);
+    return this.http
+      .get<any>(url, {
+        params,
+        responseType: 'blob' as 'json', // 🔹 這裡要用 'blob' 才能處理二進制數據
+        observe: 'response',
+      })
+      .pipe(
+        map((res) => ({
+          filename: this.getFileName(res.headers.get('Content-Disposition')),
+          body: res.body,
+        }))
+      );
+  }
+
+  /**
+   * 取得檔案名稱
+   * @param contentDisposition Header
+   * */
+  getFileName(contentDisposition: any): string {
+    console.log(contentDisposition);
+    let filename = 'FileName';
+    // 正則表達式
+    const regex = /filename\*?=(?:UTF-8''|UTF-8['"]?Q\?)?([^;"']+)/i;
+    // const regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = regex.exec(contentDisposition);
+    if (matches != null && matches[1]) {
+      filename = matches[1];
+    }
+    return filename;
   }
 }

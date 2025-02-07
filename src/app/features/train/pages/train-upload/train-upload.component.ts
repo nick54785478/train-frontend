@@ -11,13 +11,19 @@ import { SystemMessageService } from '../../../../core/services/system-message.s
 import { JspreadsheetWrapper } from '../../../../shared/wrapper/jspreadsheet-wrapper';
 import jspreadsheet from 'jspreadsheet-ce';
 import { TrainService } from '../../services/train.service';
-import { finalize } from 'rxjs';
+import { finalize, map } from 'rxjs';
+import { TemplateType } from '../../../../core/enums/template-type.enum';
+import { SaveDownloadFileService } from '../../../../shared/services/save-download-file.service';
 
 @Component({
   selector: 'app-train-upload',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [SystemMessageService, LoadingMaskService],
+  providers: [
+    SystemMessageService,
+    LoadingMaskService,
+    SaveDownloadFileService,
+  ],
   templateUrl: './train-upload.component.html',
   styleUrl: './train-upload.component.scss',
 })
@@ -29,7 +35,10 @@ export class TrainUploadComponent
 
   spreadsheet: any;
 
-  constructor(private trainService: TrainService) {
+  constructor(
+    private trainService: TrainService,
+    private saveDownloadFileService: SaveDownloadFileService
+  ) {
     super();
   }
 
@@ -271,5 +280,36 @@ export class TrainUploadComponent
         this.jexcel.contextMenu.remove();
       }
     }, 100);
+  }
+
+  /**
+   * 下載火車上傳範本
+   */
+  downloadTemplate(event: Event) {
+    event.preventDefault();
+    console.log('下載範本');
+
+    this.loadingMaskService.show();
+    this.trainService
+      .downloadTemplate('TRAIN_UPLOAD')
+      .pipe(
+        finalize(() => {
+          this.loadingMaskService.hide();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.messageService.success('下載成功');
+          console.log(res.filename);
+          this.saveDownloadFileService.saveBufferAsXlsx(
+            res.body,
+            decodeURI(res.filename)
+            // res.filename
+          );
+        },
+        error: (err) => {
+          this.messageService.error(err);
+        },
+      });
   }
 }

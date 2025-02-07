@@ -100,6 +100,10 @@
     #dt
     responsiveLayout="stack"
     [rowsPerPageOptions]="[2, 5, 10]"
+    [tableStyle]="{
+      'min-width': '10rem',
+      'word-wrap': 'break-word'
+    }"
     styleClass="p-datatable-gridlines p-datatable-sm p-datatable-striped"
     selectionMode="single"
     [resizableColumns]="true"
