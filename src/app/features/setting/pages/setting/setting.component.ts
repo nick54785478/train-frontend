@@ -113,7 +113,7 @@ export class SettingComponent implements OnInit, OnDestroy {
     this.dialogOpened = true;
 
     const ref = this.dialogService.open(DialogFormComponent, {
-      header: '更新一筆資料',
+      header: formAction === FormAction.ADD ? '新增一筆資料' : '更新一筆資料',
       width: '70%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
@@ -132,6 +132,7 @@ export class SettingComponent implements OnInit, OnDestroy {
       .subscribe((returnData: any) => {
         console.log('關閉 Dialog');
         this.dialogOpened = false;
+        this.query();
       });
     return ref;
   }

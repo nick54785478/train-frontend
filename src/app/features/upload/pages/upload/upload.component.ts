@@ -121,11 +121,10 @@ export class UploadComponent
           if (!res) {
             this.templateForm.reset();
             this.templateForm.patchValue({
-              name: formData.templateType,
-              templateType:
-                TemplateType[
-                  formData.templateType as keyof typeof TemplateType
-                ],
+              name: TemplateType[
+                formData.templateType as keyof typeof TemplateType
+              ],
+              templateType: formData.templateType,
             });
           } else {
             this.templateForm.patchValue({
@@ -148,6 +147,8 @@ export class UploadComponent
    */
   clear() {
     this.showResult = false;
+    this.formGroup.reset();
+    this.templateForm.reset();
   }
 
   /**
@@ -347,6 +348,8 @@ export class UploadComponent
         finalize(() => {
           this.loadingMaskService.hide();
           this.submitted = false;
+          location.reload();
+          this.query();
         })
       )
       .subscribe({

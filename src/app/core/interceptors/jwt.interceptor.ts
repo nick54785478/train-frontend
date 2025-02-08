@@ -60,6 +60,11 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
             },
             error: (err) => {
               console.log('刷新失敗', err);
+              messageService.error('Token 過期，請重新登入');
+              setTimeout(() => {
+                // 目前 外部 AuthService 無刷新機制
+                router.navigateByUrl('/login');
+              }, 500);
             },
           });
         }

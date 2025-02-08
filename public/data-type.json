@@ -126,5 +126,13 @@
     "labelTw": "TEMPLATE",
     "labelCn": "SHEET NAME",
     "labelUs": "范本"
+  },
+  {
+    "id": "",
+    "label": "JASPER PARAMETER 設定",
+    "value": "JASPER_PARAMETER",
+    "labelTw": "JASPER PARAMETER",
+    "labelCn": "JASPER PARAMETER",
+    "labelUs": "JASPER PARAMETER"
   }
 ]

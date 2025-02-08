@@ -20,6 +20,7 @@ import { DataType } from '../../../../../core/enums/data-type.enum';
   selector: 'app-setting-form',
   standalone: true,
   imports: [SharedModule, CoreModule],
+  providers: [SystemMessageService],
   templateUrl: './setting-form.component.html',
   styleUrl: './setting-form.component.scss',
 })
@@ -117,7 +118,9 @@ export class SettingFormComponent
           // 無論成功或失敗都會執行
           this.clear();
           // this.loading = false;
-          location.reload();
+          setTimeout(() => {
+            location.reload();
+          }, 500);
         })
       )
       .subscribe({
@@ -146,12 +149,14 @@ export class SettingFormComponent
           // 無論成功或失敗都會執行
           this.clear();
           // this.loading = false;
-          location.reload();
+          setTimeout(() => {
+            location.reload();
+          }, 500);
         })
       )
       .subscribe({
         next: (res) => {
-          this.systemMessageService.success('新增資料成功');
+          this.systemMessageService.success('更新資料成功');
           this.onCloseForm();
         },
         error: (error) => {
