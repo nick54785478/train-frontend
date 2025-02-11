@@ -5,13 +5,17 @@
     [rowsPerPageOptions]="[2, 5, 10]"
     styleClass="p-datatable-gridlines p-datatable-sm p-datatable-striped"
     selectionMode="single"
+    [tableStyle]="{
+      'min-width': '10rem',
+      'word-wrap': 'break-word'
+    }"
     [resizableColumns]="true"
     [value]="tableData"
     [columns]="cols"
     [(selection)]="selectedData"
     [scrollable]="true"
     scrollDirection="both"
-    scrollHeight="300px"
+    scrollHeight="200px"
     [paginator]="true"
     [rows]="10"
   >
@@ -19,13 +23,21 @@
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-          {{ col.header }} <p-sortIcon [field]="col.field" />
+          <div
+            [style]="{
+              'word-break': 'break-all',
+              'max-width': '100%',
+              'min-width': '1rem'
+            }"
+          >
+            {{ col.header }} <p-sortIcon [field]="col.field" />
+          </div>
         </th>
         <th
           alignFrozen="right"
           pFrozenColumn
           style="
-            min-width: 70px !important;
+            min-width: 1rem !important;
             max-width: 70px !important;
             width: 70px !important;
           "
@@ -37,20 +49,27 @@
     <!-- 內容 -->
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr [pSelectableRow]="rowData">
-        <td
-          *ngFor="let col of columns"
-          [ngStyle]="{ 'word-break': 'break-all' }"
-        >
+        <td *ngFor="let col of columns">
           <ng-container>
-            {{ rowData[col.field] }}
+            <div
+              [style]="{
+                'word-break': 'break-all',
+                'max-width': '100%',
+                'min-width': '2rem'
+              }"
+            >
+              {{ rowData[col.field] }}
+            </div>
           </ng-container>
         </td>
-        <td alignFrozen="right" pFrozenColumn style="text-align: center">
-          <p-checkbox
-            [binary]="true"
-            [ngModel]="isChecked(rowData)"
-            (onChange)="clickRowActionMenu(rowData)"
-          ></p-checkbox>
+        <td alignFrozen="right" pFrozenColumn>
+          <div>
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="isChecked(rowData)"
+              (onChange)="clickRowActionMenu(rowData)"
+            ></p-checkbox>
+          </div>
         </td>
       </tr>
     </ng-template>

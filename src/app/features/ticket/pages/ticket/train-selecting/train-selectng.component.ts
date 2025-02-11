@@ -76,7 +76,7 @@ export class TrainSelectingComponent
       },
       {
         field: 'fromStopTime',
-        header: '起站抵達時間',
+        header: '發車時間',
         type: '',
       },
       {
@@ -86,7 +86,7 @@ export class TrainSelectingComponent
       },
       {
         field: 'toStopTime',
-        header: '迄站抵達時間',
+        header: '抵達時間',
         type: '',
       },
       {

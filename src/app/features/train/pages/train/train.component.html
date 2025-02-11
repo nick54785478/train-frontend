@@ -126,7 +126,7 @@
           alignFrozen="right"
           pFrozenColumn
           style="
-            min-width: 70px !important;
+            min-width: 1rem !important;
             max-width: 70px !important;
             width: 70px !important;
           "
@@ -138,15 +138,20 @@
     <!-- 內容 -->
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr [pSelectableRow]="rowData">
-        <td
-          *ngFor="let col of columns"
-          [ngStyle]="{ 'word-break': 'break-all' }"
-        >
+        <td *ngFor="let col of columns">
           <ng-container>
-            {{ rowData[col.field] }}
+            <div
+              [style]="{
+                'word-break': 'break-all',
+                'max-width': '100%',
+                'min-width': '3rem'
+              }"
+            >
+              {{ rowData[col.field] }}
+            </div>
           </ng-container>
         </td>
-        <td alignFrozen="right" pFrozenColumn style="text-align: center">
+        <td alignFrozen="right" pFrozenColumn>
           <div>
             <p-menu
               #menu
@@ -213,7 +218,11 @@
       <tr [pSelectableRow]="rowData">
         <td
           *ngFor="let col of columns"
-          [ngStyle]="{ 'word-break': 'break-all' }"
+          [ngStyle]="{
+            'word-break': 'break-all',
+            'max-width': '100%',
+            'min-width': '5rem'
+          }"
         >
           <ng-container>
             {{ rowData[col.field] }}
