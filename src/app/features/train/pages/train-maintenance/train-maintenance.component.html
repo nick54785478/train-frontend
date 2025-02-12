@@ -8,6 +8,8 @@
             [options]="trainNos"
             optionValue="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             optionLabel="value"
@@ -119,6 +121,8 @@
                 <p-dropdown
                   placeholder="請選擇"
                   [(ngModel)]="rowData[col.field]"
+                  [filter]="true"
+                  filterBy="value"
                   [options]="loadDropdownData(col)"
                   [style]="{
                     'word-wrap': 'break-word',

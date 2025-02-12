@@ -118,15 +118,15 @@ export class LoginComponent
    */
   setUsername(username: string) {
     // 透過後端 API 取得使用者個人資訊
-    this.loginService.getUserInfo(username).subscribe((res) => {
-      // 設置 name
-      this.storageService.setSessionStorageItem(
-        SystemStorageKey.NAME,
-        res.name
-      );
-      // 設置 name
-      this.storageService.setLocalStorageItem(SystemStorageKey.NAME, res.name);
-    });
+    // this.loginService.getUserInfo(username).subscribe((res) => {
+    //   // 設置 name
+    //   this.storageService.setSessionStorageItem(
+    //     SystemStorageKey.NAME,
+    //     res.name
+    //   );
+    //   // 設置 name
+    //   this.storageService.setLocalStorageItem(SystemStorageKey.NAME, res.name);
+    // });
 
     // 設置 username
     this.storageService.setSessionStorageItem(

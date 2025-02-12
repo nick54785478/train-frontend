@@ -19,6 +19,8 @@
           <label class="required">種類</label>
           <p-dropdown
             [options]="kinds"
+            [filter]="true"
+            filterBy="value"
             optionValue="value"
             placeholder="請選擇"
             [showClear]="true"

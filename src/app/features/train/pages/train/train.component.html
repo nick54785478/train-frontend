@@ -8,6 +8,8 @@
             [options]="trainNoList"
             optionValue="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             formControlName="trainNo"
@@ -21,6 +23,8 @@
             optionValue="value"
             optionLabel="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             formControlName="trainKind"
@@ -33,6 +37,8 @@
             [options]="stops"
             optionValue="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             formControlName="fromStop"
@@ -45,6 +51,8 @@
             [options]="stops"
             optionValue="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             formControlName="toStop"
@@ -99,10 +107,6 @@
   <p-table
     #dt
     [rowsPerPageOptions]="[2, 5, 10]"
-    [tableStyle]="{
-      'min-width': '10rem',
-      'word-wrap': 'break-word'
-    }"
     styleClass="p-datatable-gridlines p-datatable-sm p-datatable-striped"
     selectionMode="single"
     [resizableColumns]="true"
@@ -119,7 +123,17 @@
     <!-- 標題 -->
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        <th
+          *ngFor="let col of columns"
+          [pSortableColumn]="col.field"
+          style="
+            white-space: pre-wrap;
+            word-break: break-all;
+            word-wrap: break-word;
+            max-width: 100% !important;
+            min-width: 5rem !important;
+          "
+        >
           {{ col.header }} <p-sortIcon [field]="col.field" />
         </th>
         <th
@@ -138,17 +152,18 @@
     <!-- 內容 -->
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr [pSelectableRow]="rowData">
-        <td *ngFor="let col of columns">
+        <td
+          *ngFor="let col of columns"
+          style="
+            white-space: pre-wrap;
+            word-break: break-all;
+            word-wrap: break-word;
+            max-width: 100% !important;
+            min-width: 5rem !important;
+          "
+        >
           <ng-container>
-            <div
-              [style]="{
-                'word-break': 'break-all',
-                'max-width': '100%',
-                'min-width': '3rem'
-              }"
-            >
-              {{ rowData[col.field] }}
-            </div>
+            {{ rowData[col.field] }}
           </ng-container>
         </td>
         <td alignFrozen="right" pFrozenColumn>
@@ -190,14 +205,22 @@
     [(selection)]="selectedLineData"
     [scrollable]="true"
     scrollDirection="both"
-    scrollHeight="300px"
+    scrollHeight="200px"
     [paginator]="true"
     [rows]="10"
   >
     <!-- 標題 -->
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        <th
+          *ngFor="let col of columns"
+          [pSortableColumn]="col.field"
+          [style]="{
+            'word-break': 'break-all',
+            'max-width': '100%',
+            'min-width': '3rem'
+          }"
+        >
           {{ col.header }} <p-sortIcon [field]="col.field" />
         </th>
         <th
@@ -218,10 +241,10 @@
       <tr [pSelectableRow]="rowData">
         <td
           *ngFor="let col of columns"
-          [ngStyle]="{
+          [style]="{
             'word-break': 'break-all',
             'max-width': '100%',
-            'min-width': '5rem'
+            'min-width': '3rem'
           }"
         >
           <ng-container>

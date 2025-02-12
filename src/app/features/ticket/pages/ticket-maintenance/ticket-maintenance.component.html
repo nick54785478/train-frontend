@@ -8,6 +8,8 @@
             [options]="trainNos"
             optionValue="value"
             placeholder="請選擇"
+            [filter]="true"
+            filterBy="value"
             [showClear]="true"
             appendTo="body"
             formControlName="trainNo"
@@ -119,6 +121,8 @@
               <ng-container *ngIf="col.type === 'dropdown'">
                 <p-dropdown
                   placeholder="請選擇"
+                  [filter]="true"
+                  filterBy="value"
                   [(ngModel)]="rowData[col.field]"
                   [options]="loadDropdownData(col)"
                   [style]="{
