@@ -21,7 +21,7 @@ import { DataType } from '../../../../core/enums/data-type.enum';
   selector: 'app-create-timetable',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [SystemMessageService],
+  providers: [],
   templateUrl: './create-timetable.component.html',
   styleUrl: './create-timetable.component.scss',
 })
@@ -36,9 +36,7 @@ export class CreateTimetableComponent
 
   constructor(
     private optionService: OptionService,
-    private trainService: TrainService,
-    private loadingMaskService: LoadingMaskService,
-    private messageService: SystemMessageService
+    private trainService: TrainService
   ) {
     super();
   }

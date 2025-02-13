@@ -13,7 +13,7 @@ import { finalize } from 'rxjs/internal/operators/finalize';
   selector: 'app-train-stops',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [SystemMessageService],
+  providers: [],
   templateUrl: './train-stops.component.html',
   styleUrl: './train-stops.component.scss',
 })
@@ -25,8 +25,7 @@ export class TrainStopsComponent extends BaseTableCompoent implements OnInit {
   constructor(
     public ref: DynamicDialogRef,
     private trainService: TrainService,
-    private dialogConfig: DynamicDialogConfig,
-    private messageService: SystemMessageService
+    private dialogConfig: DynamicDialogConfig
   ) {
     super();
   }

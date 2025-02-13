@@ -38,7 +38,6 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
 
   constructor(
     private optionService: OptionService,
-    private messageService: SystemMessageService,
     private storageService: StorageService,
     private router: Router
   ) {

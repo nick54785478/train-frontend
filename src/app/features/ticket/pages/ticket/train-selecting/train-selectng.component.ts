@@ -39,7 +39,6 @@ export class TrainSelectingComponent
   constructor(
     private route: ActivatedRoute,
     private trainTicketService: TrainTicketService,
-    private messageService: SystemMessageService,
     private storageService: StorageService,
     private router: Router
   ) {
@@ -129,7 +128,10 @@ export class TrainSelectingComponent
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this._destroying$.unsubscribe();
+    this._destroying$.closed;
+  }
 
   /**
    * 提交訂單

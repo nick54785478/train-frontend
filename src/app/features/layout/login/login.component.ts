@@ -16,13 +16,7 @@ import { SystemStorageKey } from '../../../core/enums/system-storage.enum';
   selector: 'app-login',
   standalone: true,
   imports: [SharedModule, CoreModule],
-  providers: [
-    SystemMessageService,
-    LoadingMaskService,
-    AuthService,
-    StorageService,
-    Router,
-  ],
+  providers: [AuthService, StorageService, Router],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -36,8 +30,7 @@ export class LoginComponent
     public router: Router,
     private loginService: LoginService,
     private authService: AuthService,
-    private storageService: StorageService,
-    private messageService: SystemMessageService
+    private storageService: StorageService
   ) {
     super();
   }

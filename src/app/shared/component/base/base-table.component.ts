@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SystemMessageService } from '../../../core/services/system-message.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { LoadingMaskService } from '../../../core/services/loading-mask.service';
 
 /**
  * 定義基礎的 Table 表格 Component
@@ -10,10 +11,13 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
   selector: 'app-base-form-compoent',
   standalone: true,
   imports: [],
-  providers: [],
+  providers: [LoadingMaskService, SystemMessageService],
   template: '',
 })
 export abstract class BaseTableCompoent {
+  protected loadingMaskService = inject(LoadingMaskService);
+  protected messageService = inject(SystemMessageService);
+
   constructor() {}
 
   /**

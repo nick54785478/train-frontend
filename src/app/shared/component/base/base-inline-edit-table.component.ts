@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, inject, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SystemMessageService } from '../../../core/services/system-message.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -6,6 +6,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Option } from '../../models/option.model';
 import { BaseTableRow } from '../../models/base-table-row.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { LoadingMaskService } from '../../../core/services/loading-mask.service';
 
 /**
  * 定義基礎的 Inline editible 表格 Component
@@ -14,10 +15,13 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
   selector: 'app-base-inline-edit-form-compoent',
   standalone: true,
   imports: [],
-  providers: [],
+  providers: [LoadingMaskService, SystemMessageService],
   template: '',
 })
 export abstract class BaseInlineEditeTableCompoent {
+  protected loadingMaskService = inject(LoadingMaskService);
+  protected messageService = inject(SystemMessageService);
+
   /**
    * 上方頁簽
    * */

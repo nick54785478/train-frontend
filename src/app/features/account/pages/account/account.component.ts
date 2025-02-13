@@ -48,8 +48,6 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private loadingMaskService: LoadingMaskService,
-    private messageService: SystemMessageService,
     private storageService: StorageService,
     public dialogService: DialogService
   ) {

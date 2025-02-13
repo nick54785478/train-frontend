@@ -25,7 +25,7 @@ import { DataType } from '../../../../../core/enums/data-type.enum';
   selector: 'app-ticket-detail',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [Router, SystemMessageService, LoadingMaskService],
+  providers: [Router],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.scss',
 })
@@ -40,8 +40,6 @@ export class TicketDetailComponent
     private router: Router,
     private trainSeatService: TrainSeatService,
     private trainTicketService: TrainTicketService,
-    private messageService: SystemMessageService,
-    private loadingMaskService: LoadingMaskService,
     private optionService: OptionService,
     private storageService: StorageService
   ) {

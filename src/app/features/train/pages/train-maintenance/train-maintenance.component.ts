@@ -24,12 +24,7 @@ import { DialogConfirmService } from '../../../../core/services/dialog-confirm.s
   selector: 'app-train-maintenance',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [
-    OptionService,
-    SystemMessageService,
-    DialogService,
-    DialogConfirmService,
-  ],
+  providers: [OptionService, DialogService, DialogConfirmService],
   templateUrl: './train-maintenance.component.html',
   styleUrl: './train-maintenance.component.scss',
 })
@@ -44,10 +39,8 @@ export class TrainMaintenanceComponent
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
   constructor(
     private dialogConfirmService: DialogConfirmService,
-    private loadingMaskService: LoadingMaskService,
     private optionService: OptionService,
-    private trainService: TrainService,
-    private messageService: SystemMessageService
+    private trainService: TrainService
   ) {
     super();
   }

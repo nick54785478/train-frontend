@@ -1,7 +1,9 @@
-import { Component, Output } from '@angular/core';
+import { Component, inject, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Option } from '../../models/option.model';
+import { SystemMessageService } from '../../../core/services/system-message.service';
+import { LoadingMaskService } from '../../../core/services/loading-mask.service';
 
 /**
  * 定義基礎的 Header & Line 雙表格 Component
@@ -10,10 +12,13 @@ import { Option } from '../../models/option.model';
   selector: 'app-base-header-line-form-compoent',
   standalone: true,
   imports: [],
-  providers: [],
+  providers: [LoadingMaskService, SystemMessageService],
   template: '',
 })
 export abstract class BaseHeaderLineTableCompoent {
+  protected loadingMaskService = inject(LoadingMaskService);
+  protected messageService = inject(SystemMessageService);
+
   /**
    * 上方頁簽
    * */

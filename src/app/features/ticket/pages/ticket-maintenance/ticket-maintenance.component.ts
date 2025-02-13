@@ -31,8 +31,6 @@ export class TicketMaintenanceComponent
   constructor(
     private optionService: OptionService,
     private trainTicketService: TrainTicketService,
-    private loadingMaskService: LoadingMaskService,
-    private messageService: SystemMessageService,
     private dialogConfirmService: DialogConfirmService
   ) {
     super();

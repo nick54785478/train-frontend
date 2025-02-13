@@ -43,9 +43,7 @@ export class TrainComponent
   constructor(
     private optionService: OptionService,
     private trainService: TrainService,
-    private dialogService: DialogService,
-    private loadingMaskService: LoadingMaskService,
-    private messageService: SystemMessageService
+    private dialogService: DialogService
   ) {
     super();
   }
