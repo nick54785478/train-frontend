@@ -18,7 +18,7 @@ import { CreateOrUpdateTicketResource } from '../../models/create-or-update-tick
   selector: 'app-ticket-maintenance',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [DialogConfirmService],
+  providers: [DialogConfirmService, SystemMessageService, LoadingMaskService],
   templateUrl: './ticket-maintenance.component.html',
   styleUrl: './ticket-maintenance.component.scss',
 })
@@ -220,6 +220,7 @@ export class TicketMaintenanceComponent
       )
       .subscribe({
         next: (res) => {
+          this.messageService.success('查詢成功');
           this.tableData = res;
           // 對所有資料進行編號
           for (var i = 0; i < this.tableData.length; i++) {

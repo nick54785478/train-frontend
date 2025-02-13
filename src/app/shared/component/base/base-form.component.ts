@@ -11,12 +11,10 @@ import { LoadingMaskService } from '../../../core/services/loading-mask.service'
   selector: 'app-base-form-compoent',
   standalone: true,
   imports: [],
-  providers: [SystemMessageService, LoadingMaskService],
+  providers: [],
   template: '',
 })
 export abstract class BaseFormCompoent {
-  protected loadingMaskService = inject(LoadingMaskService);
-  protected messageService = inject(SystemMessageService);
   /**
    * 定義 Form Group
    * */

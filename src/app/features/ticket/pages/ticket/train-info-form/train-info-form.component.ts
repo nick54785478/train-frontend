@@ -18,12 +18,13 @@ import { Option } from '../../../../../shared/models/option.model';
 import { TrainTicketService } from '../../../services/train-ticket.service';
 import { StorageService } from '../../../../../core/services/storage.service';
 import { Router } from '@angular/router';
+import { LoadingMaskService } from '../../../../../core/services/loading-mask.service';
 
 @Component({
   selector: 'app-train-info-form',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [TrainTicketService],
+  providers: [TrainTicketService, SystemMessageService, LoadingMaskService],
   templateUrl: './train-info-form.component.html',
   styleUrl: './train-info-form.component.scss',
 })
@@ -39,7 +40,9 @@ export class TrainInfoFormComponent extends BaseFormCompoent implements OnInit {
   constructor(
     private optionService: OptionService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    private loadingMaskService: LoadingMaskService,
+    private messageService: SystemMessageService
   ) {
     super();
   }

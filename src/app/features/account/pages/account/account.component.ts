@@ -29,7 +29,12 @@ import { TicketRecordComponent } from './ticket-record/ticket-record.component';
   selector: 'app-account',
   standalone: true,
   imports: [SharedModule, CoreModule],
-  providers: [LoadingMaskService, AccountService, DialogService],
+  providers: [
+    SystemMessageService,
+    LoadingMaskService,
+    AccountService,
+    DialogService,
+  ],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
 })

@@ -11,7 +11,7 @@ import { LoadingMaskService } from '../../../core/services/loading-mask.service'
   selector: 'app-base-form-compoent',
   standalone: true,
   imports: [],
-  providers: [LoadingMaskService, SystemMessageService],
+  providers: [SystemMessageService, LoadingMaskService],
   template: '',
 })
 export abstract class BaseTableCompoent {

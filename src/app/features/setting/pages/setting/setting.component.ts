@@ -39,7 +39,7 @@ import { DataType } from '../../../../core/enums/data-type.enum';
 export class SettingComponent implements OnInit, OnDestroy {
   dataTypes: Option[] = [];
   activeFlags: Option[] = [];
-  //Table Row Actions 選單。
+  // Table Row Actions 選單。
   rowActionMenu: MenuItem[] = [];
 
   /**

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CoreModule } from '../../../../core/core.module';
 import { Option } from '../../../../shared/models/option.model';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -18,6 +18,7 @@ import { TrainDetailComponent } from './train-detail/train-detail.component';
 import { TrainDialogType } from '../../../../core/enums/train-dialog-type.enum';
 import { DialogConfig } from '../../../../shared/models/dialog-config.model';
 import { TrainStopsComponent } from './train-stops/train-stops.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-train',
@@ -29,7 +30,7 @@ import { TrainStopsComponent } from './train-stops/train-stops.component';
 })
 export class TrainComponent
   extends BaseHeaderLineTableCompoent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   trainNoList: Option[] = []; // Active Flag 的下拉式選單
   stops: Option[] = []; // 車站資料的下拉式選單
@@ -146,6 +147,11 @@ export class TrainComponent
     });
   }
 
+  ngOnDestroy(): void {
+    this._destroying$.unsubscribe();
+    this._destroying$.closed;
+  }
+
   /**
    * 查詢火車車次資料
    * @returns
@@ -175,9 +181,14 @@ export class TrainComponent
           this.submitted = false;
         })
       )
-      .subscribe((res) => {
-        console.log(res);
-        this.headerTableData = res;
+      .subscribe({
+        next: (res) => {
+          this.headerTableData = res;
+          this.messageService.success('查詢成功');
+        },
+        error: (error) => {
+          this.messageService.error(error);
+        },
       });
   }
 

@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SystemMessageService } from '../../../core/services/system-message.service';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { LoadingMaskService } from '../../../core/services/loading-mask.service';
 
 /**
@@ -11,7 +10,7 @@ import { LoadingMaskService } from '../../../core/services/loading-mask.service'
   selector: 'app-base-table-form-compoent',
   standalone: true,
   imports: [],
-  providers: [LoadingMaskService, SystemMessageService],
+  providers: [],
   template: '',
 })
 export abstract class BaseFormTableCompoent {

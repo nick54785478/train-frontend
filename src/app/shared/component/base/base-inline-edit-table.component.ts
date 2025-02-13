@@ -7,6 +7,9 @@ import { Option } from '../../models/option.model';
 import { BaseTableRow } from '../../models/base-table-row.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { LoadingMaskService } from '../../../core/services/loading-mask.service';
+import { CoreModule } from '../../../core/core.module';
+import { SharedModule } from '../../shared.module';
+import { CommonModule } from '@angular/common';
 
 /**
  * 定義基礎的 Inline editible 表格 Component
@@ -14,7 +17,7 @@ import { LoadingMaskService } from '../../../core/services/loading-mask.service'
 @Component({
   selector: 'app-base-inline-edit-form-compoent',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, SharedModule, CoreModule],
   providers: [LoadingMaskService, SystemMessageService],
   template: '',
 })

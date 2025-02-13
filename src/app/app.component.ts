@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
-import { provideHttpClient } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
-import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { LoadingMaskService } from './core/services/loading-mask.service';
 import { delay } from 'rxjs/internal/operators/delay';

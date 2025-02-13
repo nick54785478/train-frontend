@@ -8,8 +8,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { LoadingMaskService } from './core/services/loading-mask.service';
+import { SystemMessageService } from './core/services/system-message.service';
 
 /**
  * 根模組 (Root Module)
@@ -30,6 +36,7 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
   providers: [
     ConfirmationService,
     MessageService,
+    LoadingMaskService,
     DialogService,
   ],
   bootstrap: [],

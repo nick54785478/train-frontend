@@ -19,12 +19,19 @@ import {
   UpdateTrainResource,
 } from '../../models/update-train-resource.model';
 import { DialogConfirmService } from '../../../../core/services/dialog-confirm.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-train-maintenance',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [OptionService, DialogService, DialogConfirmService],
+  providers: [
+    OptionService,
+    DialogService,
+    DialogConfirmService,
+    SystemMessageService,
+    LoadingMaskService,
+  ],
   templateUrl: './train-maintenance.component.html',
   styleUrl: './train-maintenance.component.scss',
 })
@@ -37,6 +44,7 @@ export class TrainMaintenanceComponent
   dialogOpened: boolean = false; //  Dialog 狀態
   rowActionMenu: MenuItem[] = []; // Table Row Actions 右側選單。
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
+
   constructor(
     private dialogConfirmService: DialogConfirmService,
     private optionService: OptionService,
@@ -349,7 +357,7 @@ export class TrainMaintenanceComponent
   }
 
   /**
-   * 判斷Type欄位是否可修改
+   * 判斷 Type 欄位是否可修改
    * @param rowData 該 row 的資料
    * @param field 欄位名稱
    * @returns
@@ -389,13 +397,18 @@ export class TrainMaintenanceComponent
           this.submitted = false;
         })
       )
-      .subscribe((res) => {
-        console.log(res);
-        this.tableData = res.stops;
-        // 對所有資料進行編號
-        for (var i = 0; i < this.tableData.length; i++) {
-          this.tableData[i].givenIndex = i;
-        }
+      .subscribe({
+        next: (res) => {
+          this.messageService.success('查詢成功');
+          this.tableData = res.stops;
+          // 對所有資料進行編號
+          for (var i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].givenIndex = i;
+          }
+        },
+        error: (error) => {
+          this.messageService.error(error);
+        },
       });
   }
 
@@ -548,6 +561,7 @@ export class TrainMaintenanceComponent
       return;
     }
 
+    this.loadingMaskService.show();
     this.trainService
       .updateTrain(requestData)
       .pipe(
@@ -561,6 +575,7 @@ export class TrainMaintenanceComponent
           if (res.code === 'VALIDATE_FAILED') {
             this.messageService.error(res.message);
           } else {
+            console.log(res);
             this.messageService.success(res.message);
           }
         },

@@ -11,13 +11,10 @@ import { LoadingMaskService } from '../../../core/services/loading-mask.service'
   selector: 'app-base-pickList-compoent',
   standalone: true,
   imports: [],
-  providers: [LoadingMaskService, SystemMessageService],
+  providers: [],
   template: '',
 })
 export abstract class BasePickListCompoent {
-  protected loadingMaskService = inject(LoadingMaskService);
-  protected messageService = inject(SystemMessageService);
-
   // 定義 Form Group
   protected formGroup!: FormGroup;
 
