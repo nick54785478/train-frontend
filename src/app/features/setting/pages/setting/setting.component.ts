@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   DialogService,
@@ -11,7 +11,6 @@ import { SystemMessageService } from '../../../../core/services/system-message.s
 import { OptionService } from '../../../../shared/services/option.service';
 import { Option } from '../../../../shared/models/option.model';
 import { SettingService } from '../../service/setting.service';
-import { SettingQueried } from '../../models/setting-query.model';
 import { MenuItem } from 'primeng/api';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs/internal/Subject';
@@ -20,6 +19,13 @@ import { FormAction } from '../../../../core/enums/form-action.enum';
 import { SettingFormComponent } from './setting-form/setting-form.component';
 import { DialogConfirmService } from '../../../../core/services/dialog-confirm.service';
 import { DataType } from '../../../../core/enums/data-type.enum';
+import { finalize, first, firstValueFrom, lastValueFrom, map, of } from 'rxjs';
+import { StorageService } from '../../../../core/services/storage.service';
+import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
+import { SettingQueriedResource } from '../../models/setting-queried-resource.model';
+import { error } from 'console';
+import { SettingTableColumnCustomisation } from '../../enums/setting-tablecolumn-customisation.enum';
+import { UpdateCustomizedValueResource } from '../../models/update-customized-value-resource.model copy';
 
 @Component({
   selector: 'app-setting',
@@ -41,6 +47,10 @@ export class SettingComponent implements OnInit, OnDestroy {
   activeFlags: Option[] = [];
   // Table Row Actions 選單。
   rowActionMenu: MenuItem[] = [];
+  username!: string;
+  fields: Option[] = [];
+  selectedFields: Option[] = [];
+  viewCols: string[] = [];
 
   /**
    * 用來取消訂閱
@@ -49,19 +59,18 @@ export class SettingComponent implements OnInit, OnDestroy {
 
   // 現在選取的那一筆
   rowCurrentData: any;
-
-  tableData: SettingQueried[] = []; // 查詢表格資料
+  tableData: SettingQueriedResource[] = []; // 查詢表格資料
   cols: any[] = []; // 表格資訊
+  filteredCols: any[] = []; // 過濾後的表格資訊
   selectedData: [] = []; // 選擇資料清單
-
   dialogOpened: boolean = false;
-
   formAction!: FormAction; // Dialog 操作
 
   constructor(
     private dialogConfirmService: DialogConfirmService,
     private dynamicDialogRef: DynamicDialogRef,
     public dialogService: DialogService,
+    private storageService: StorageService,
     private optionService: OptionService,
     private settingService: SettingService,
     public messageService: SystemMessageService
@@ -101,8 +110,49 @@ export class SettingComponent implements OnInit, OnDestroy {
       { field: 'description', header: '說明' },
       { field: 'priorityNo', header: '排序' },
     ];
+    this.loadOptions();
 
     this.query();
+  }
+
+  /**
+   * 取得個人化設定(可以看到 Table 的欄位設定)
+   */
+  async loadOptions() {
+    // 取得使用者名稱
+    this.username = await firstValueFrom(
+      of(
+        this.storageService.getLocalStorageItem(SystemStorageKey.USERNAME) ||
+          this.storageService.getSessionStorageItem(SystemStorageKey.USERNAME)
+      )
+    );
+
+    // 可以看到的欄位
+    this.selectedFields = await firstValueFrom(
+      this.settingService
+        .queryTableColumnCustomisation(
+          this.username,
+          DataType.CUSTOMISATION,
+          'SETTING_TABLE_COLUMN'
+        )
+        .pipe(
+          map((res) => {
+            return res.value;
+          })
+        )
+    );
+
+    this.fields = await firstValueFrom(
+      this.optionService.getSettingsByDataTypeAndType('SETTING_TABLE_COLUMN')
+    );
+
+    console.log(this.selectedFields);
+    this.viewCols = this.selectedFields.map((e) => e.value);
+
+    // 只保留在 viewCols 中的欄位
+    this.filteredCols = this.cols.filter((col) =>
+      this.viewCols.includes(col.field)
+    );
   }
 
   /**
@@ -135,6 +185,29 @@ export class SettingComponent implements OnInit, OnDestroy {
         this.query();
       });
     return ref;
+  }
+
+  // async loadOptions() {
+  //   this.fields = await firstValueFrom(
+  //     this.optionService.getSettingsByDataTypeAndType('SETTING_TABLE_COLUMN')
+  //   );
+
+  //   this.selectedFields = this.fields.filter((e) =>
+  //     this.viewCols.includes(e.value)
+  //   );
+
+  //   this.cdr.detectChanges(); // 強制刷新 UI
+  // }
+
+  /**
+   * 取得 Table 所有 columns，後續用於個人化配置
+   */
+  getFields() {
+    this.optionService
+      .getSettingsByDataTypeAndType('SETTING_TABLE_COLUMN')
+      .subscribe((res) => {
+        this.fields = res;
+      });
   }
 
   /**
@@ -225,5 +298,53 @@ export class SettingComponent implements OnInit, OnDestroy {
         },
       });
     });
+  }
+
+  /**
+   * reset 個人化設定(該使用者可看到的 Table Columns)
+   */
+  resetFields() {
+    this.selectedFields = this.fields.filter((e) =>
+      this.viewCols.includes(e.value)
+    );
+  }
+
+  /**
+   * 提交個人化設定(該使用者可看到的 Table Columns)
+   */
+  submitCustomisation() {
+    let selectValues = this.selectedFields.map((e) => e.label);
+    let request: UpdateCustomizedValueResource = {
+      dataType: DataType.CUSTOMISATION,
+      type: 'SETTING_TABLE_COLUMN',
+      valueList: selectValues,
+    };
+    this.settingService
+      .updateCustomizedValue(this.username, request)
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED') {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success(res.message);
+            location.reload();
+          }
+        },
+        error: (error) => {
+          this.messageService.error(error);
+        },
+      });
+  }
+
+  /**
+   * 取得 Enum 對應的 Column 中文名稱
+   * @param label
+   * */
+  getColNameByField(label: string): string {
+    return (
+      SettingTableColumnCustomisation[
+        label as keyof typeof SettingTableColumnCustomisation
+      ] || label
+    );
   }
 }

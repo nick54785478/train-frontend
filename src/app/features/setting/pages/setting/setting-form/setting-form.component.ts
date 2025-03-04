@@ -11,10 +11,10 @@ import { OptionService } from '../../../../../shared/services/option.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BaseFormCompoent } from '../../../../../shared/component/base/base-form.component';
 import { finalize } from 'rxjs';
-import { SettingQueried } from '../../../models/setting-query.model';
 import { UpdateSetting } from '../../../models/update-setting-request.model';
 import { Location } from '@angular/common';
 import { DataType } from '../../../../../core/enums/data-type.enum';
+import { SettingQueriedResource } from '../../../models/setting-queried-resource.model';
 
 @Component({
   selector: 'app-setting-form',
@@ -186,7 +186,7 @@ export class SettingFormComponent
    * 要編輯時，設值進Form表單
    * @param data
    */
-  override patchFormGroupValue(data: SettingQueried): void {
+  override patchFormGroupValue(data: SettingQueriedResource): void {
     this.formGroup.patchValue({
       dataType: data.dataType,
       type: data.type,

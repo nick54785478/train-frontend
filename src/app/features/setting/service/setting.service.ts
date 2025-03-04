@@ -3,9 +3,11 @@ import { environment } from '../../../../environments/environment';
 import { CreateSetting } from '../models/create-setting-request.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
-import { SettingQueried } from '../models/setting-query.model';
 import { BaseResponse } from '../../../shared/models/base-response.model';
 import { UpdateSetting } from '../models/update-setting-request.model';
+import { CustomisationQueriedResource } from '../models/customisation-queried.model';
+import { SettingQueriedResource } from '../models/setting-queried-resource.model';
+import { UpdateCustomizedValueResource } from '../models/update-customized-value-resource.model copy';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +38,19 @@ export class SettingService {
   }
 
   /**
+   * 更新該使用者的個人設定
+   * @param request
+   * @return Observable<BaseResponse>
+   */
+  updateCustomizedValue(
+    username: string,
+    request: UpdateCustomizedValueResource
+  ): Observable<BaseResponse> {
+    const url = this.baseApiUrl + '/customisation/' + username;
+    return this.http.put<BaseResponse>(url, request);
+  }
+
+  /**
    * 查詢
    * @param dataType
    * @param type
@@ -46,14 +61,14 @@ export class SettingService {
     type: string,
     name: string,
     activeFlag: string
-  ): Observable<SettingQueried[]> {
+  ): Observable<SettingQueriedResource[]> {
     const url = this.baseApiUrl + '/settings/query';
     let params = new HttpParams()
       .set('dataType', dataType ? dataType : '')
       .set('type', type ? type : '')
       .set('name', name ? name : '')
       .set('activeFlag', activeFlag ? activeFlag : '');
-    return this.http.get<SettingQueried[]>(url, { params });
+    return this.http.get<SettingQueriedResource[]>(url, { params });
   }
 
   /**
@@ -64,5 +79,22 @@ export class SettingService {
   delete(id: number): Observable<BaseResponse> {
     const url = this.baseApiUrl + '/settings/' + id;
     return this.http.delete<BaseResponse>(url);
+  }
+
+  /**
+   * 查詢表格個人化配置
+   * @param username
+   * @param type
+   */
+  queryTableColumnCustomisation(
+    username: string,
+    dataType: string,
+    type: string
+  ): Observable<CustomisationQueriedResource> {
+    const url = this.baseApiUrl + '/customisation/' + username;
+    let params = new HttpParams()
+      .set('dataType', dataType ? dataType : '')
+      .set('type', type ? type : '');
+    return this.http.get<CustomisationQueriedResource>(url, { params });
   }
 }

@@ -164,6 +164,9 @@ export class LayoutTopbarComponent implements OnInit {
     this.storageService.removeLocalStorageItem(SystemStorageKey.USERNAME);
     this.storageService.removeSessionStorageItem(SystemStorageKey.USERNAME);
     this.storageService.removeLocalStorageItem(SystemStorageKey.PERMISSIONS);
+    this.storageService.removeLocalStorageItem(SystemStorageKey.JWT_TOKEN);
+    this.storageService.removeSessionStorageItem(SystemStorageKey.JWT_TOKEN);
+
     this.router.navigate(['/login']);
   }
 }

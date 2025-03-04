@@ -134,5 +134,13 @@
     "labelTw": "JASPER PARAMETER",
     "labelCn": "JASPER PARAMETER",
     "labelUs": "JASPER PARAMETER"
+  },
+  {
+    "id": "",
+    "label": "個人化配置",
+    "value": "CUSTOMISATION",
+    "labelTw": "個人化配置",
+    "labelCn": "个人化配置",
+    "labelUs": "CUSTOMISATION"
   }
 ]
