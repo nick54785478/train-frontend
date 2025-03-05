@@ -95,9 +95,16 @@
     </div>
   </p-panel>
 </form>
+
 <ng-container *ngIf="showPreview">
   <p-panel header="內容預覽">
-    預覽內容僅顯示選定工作表的前 {{ maxRow }} 筆資料
-    <div #spreadsheet class="spreadsheet-container"></div>
+    <div class="grid p-fluid">
+      <div class="col-12 md:col-12 lg:col-12">
+        預覽內容僅顯示選定工作表的前 {{ maxRow }} 筆資料
+      </div>
+      <div class="col-12 md:col-12 lg:col-12">
+        <div #spreadsheet class="spreadsheet-container"></div>
+      </div>
+    </div>
   </p-panel>
 </ng-container>
