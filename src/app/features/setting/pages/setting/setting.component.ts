@@ -263,7 +263,6 @@ export class SettingComponent implements OnInit, OnDestroy {
         next: (res) => {
           this.messageService.success('查詢成功');
           this.tableData = res;
-          console.log(this.tableData);
         },
         error: (error) => {
           this.messageService.error(error.message);
