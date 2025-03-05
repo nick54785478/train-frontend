@@ -8,7 +8,7 @@ import { OptionService } from '../../../../shared/services/option.service';
 import { DataType } from '../../../../core/enums/data-type.enum';
 import { SystemMessageService } from '../../../../core/services/system-message.service';
 import { TrainService } from '../../services/train.service';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, firstValueFrom, map, of, Subject, takeUntil } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 import { BaseHeaderLineTableCompoent } from '../../../../shared/component/base/base-header-line-table.component';
 import { LoadingMaskService } from '../../../../core/services/loading-mask.service';
@@ -18,13 +18,17 @@ import { TrainDetailComponent } from './train-detail/train-detail.component';
 import { TrainDialogType } from '../../../../core/enums/train-dialog-type.enum';
 import { DialogConfig } from '../../../../shared/models/dialog-config.model';
 import { TrainStopsComponent } from './train-stops/train-stops.component';
-import { error } from 'console';
+import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
+import { StorageService } from '../../../../core/services/storage.service';
+import { CustomisationService } from '../../../../shared/services/customisation.service';
+import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model copy';
+import { TrainTableColumnCustomisation } from '../../enums/train-tablecolumn-customisation.enum';
 
 @Component({
   selector: 'app-train',
   standalone: true,
   imports: [CommonModule, SharedModule, CoreModule],
-  providers: [DialogService],
+  providers: [DialogService, SystemMessageService],
   templateUrl: './train.component.html',
   styleUrl: './train.component.scss',
 })
@@ -38,13 +42,21 @@ export class TrainComponent
   protected override lineTableVisibled: boolean = false;
   readonly _destroying$ = new Subject<void>(); // 用來取消訂閱
 
+  filteredCols: any[] = []; // 過濾後的表格資訊
+  username!: string;
+  fields: Option[] = []; // Table 可視選項
+  selectedFields: Option[] = []; // 被選擇的 Table Column 名
+  viewCols: string[] = []; // 可視清單
+
   //Table Row Actions 選單。
   rowActionMenu: MenuItem[] = [];
 
   constructor(
+    private storageService: StorageService,
     private optionService: OptionService,
     private trainService: TrainService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private customisationService: CustomisationService
   ) {
     super();
   }
@@ -78,7 +90,7 @@ export class TrainComponent
       },
       {
         field: 'fromStopTime',
-        header: '起站發車時間',
+        header: '起始站發車時間',
         type: '',
       },
       {
@@ -145,6 +157,8 @@ export class TrainComponent
         );
       },
     });
+
+    this.loadTableViewOptions();
   }
 
   ngOnDestroy(): void {
@@ -291,5 +305,99 @@ export class TrainComponent
         this.dialogOpened = false;
       });
     return ref;
+  }
+
+  /**
+   * 取得個人化設定(可以看到 Table 的欄位設定)
+   */
+  async loadTableViewOptions() {
+    // 取得使用者名稱
+    this.username = await firstValueFrom(
+      of(
+        this.storageService.getLocalStorageItem(SystemStorageKey.USERNAME) ||
+          this.storageService.getSessionStorageItem(SystemStorageKey.USERNAME)
+      )
+    );
+
+    // 可以看到的欄位
+    this.selectedFields = await firstValueFrom(
+      this.customisationService
+        .queryTableColumnCustomisation(
+          this.username,
+          DataType.CUSTOMISATION,
+          'TRAIN_TABLE_COLUMN'
+        )
+        .pipe(
+          map((res) => {
+            return res.value;
+          })
+        )
+    );
+
+    // 取得 Table Column 可視設定資料
+    this.fields = await firstValueFrom(
+      this.optionService.getSettingsByDataTypeAndType('TRAIN_TABLE_COLUMN')
+    );
+
+    // 可視清單，控制該 table column 是否可視
+    this.viewCols = this.selectedFields.map((e) => e.value);
+
+    // 只保留在 viewCols 中的欄位
+    this.filteredCols = this.headerCols.filter((col) =>
+      this.viewCols.includes(col.field)
+    );
+  }
+
+  /**
+   * 提交個人化設定(該使用者可看到的 Table Columns)
+   */
+  submitCustomisation() {
+    let selectValues = this.selectedFields.map((e) => e.label);
+    let request: UpdateCustomizedValueResource = {
+      dataType: DataType.CUSTOMISATION,
+      type: 'TRAIN_TABLE_COLUMN',
+      valueList: selectValues,
+    };
+    this.customisationService
+      .updateCustomizedValue(this.username, request)
+      .subscribe({
+        next: (res) => {
+          if (res.code === 'VALIDATE_FAILED') {
+            this.messageService.error(res.message);
+          } else {
+            this.messageService.success(res.message);
+            this.viewCols = this.selectedFields.map((e) => e.value);
+            // 只保留在 viewCols 中的欄位
+            this.filteredCols = this.headerCols.filter((col) =>
+              this.viewCols.includes(col.field)
+            );
+            this.query();
+          }
+        },
+        error: (error) => {
+          this.messageService.error(error);
+        },
+      });
+  }
+
+  /**
+   * 取得 Enum 對應的 Column 中文名稱
+   * @param label
+   * */
+  getColNameByField(label: string): string {
+    return (
+      TrainTableColumnCustomisation[
+        label as keyof typeof TrainTableColumnCustomisation
+      ] || label
+    );
+  }
+
+  /**
+   * reset 個人化設定(該使用者可看到的 Table Columns)
+   */
+  resetFields() {
+    this.selectedFields = this.fields.filter((e) =>
+      this.viewCols.includes(e.value)
+    );
   }
 }

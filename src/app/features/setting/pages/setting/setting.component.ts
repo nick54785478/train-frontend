@@ -25,7 +25,8 @@ import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
 import { SettingQueriedResource } from '../../models/setting-queried-resource.model';
 import { error } from 'console';
 import { SettingTableColumnCustomisation } from '../../enums/setting-tablecolumn-customisation.enum';
-import { UpdateCustomizedValueResource } from '../../models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model copy';
+import { CustomisationService } from '../../../../shared/services/customisation.service';
 
 @Component({
   selector: 'app-setting',
@@ -48,9 +49,9 @@ export class SettingComponent implements OnInit, OnDestroy {
   // Table Row Actions 選單。
   rowActionMenu: MenuItem[] = [];
   username!: string;
-  fields: Option[] = [];
-  selectedFields: Option[] = [];
-  viewCols: string[] = [];
+  fields: Option[] = []; // Table 可視選項
+  selectedFields: Option[] = []; // 被選擇的 Table Column 名
+  viewCols: string[] = []; // 可視清單
 
   /**
    * 用來取消訂閱
@@ -73,6 +74,7 @@ export class SettingComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private optionService: OptionService,
     private settingService: SettingService,
+    private customisationService: CustomisationService,
     public messageService: SystemMessageService
   ) {}
 
@@ -81,6 +83,8 @@ export class SettingComponent implements OnInit, OnDestroy {
     if (this.dynamicDialogRef) {
       this.dynamicDialogRef.close();
     }
+    this._destroying$.closed;
+    this._destroying$.unsubscribe();
   }
 
   formGroup!: FormGroup;
@@ -110,7 +114,7 @@ export class SettingComponent implements OnInit, OnDestroy {
       { field: 'description', header: '說明' },
       { field: 'priorityNo', header: '排序' },
     ];
-    this.loadOptions();
+    this.loadTableViewOptions();
 
     this.query();
   }
@@ -118,7 +122,7 @@ export class SettingComponent implements OnInit, OnDestroy {
   /**
    * 取得個人化設定(可以看到 Table 的欄位設定)
    */
-  async loadOptions() {
+  async loadTableViewOptions() {
     // 取得使用者名稱
     this.username = await firstValueFrom(
       of(
@@ -129,7 +133,7 @@ export class SettingComponent implements OnInit, OnDestroy {
 
     // 可以看到的欄位
     this.selectedFields = await firstValueFrom(
-      this.settingService
+      this.customisationService
         .queryTableColumnCustomisation(
           this.username,
           DataType.CUSTOMISATION,
@@ -142,11 +146,12 @@ export class SettingComponent implements OnInit, OnDestroy {
         )
     );
 
+    // 取得 Table Column 可視設定資料
     this.fields = await firstValueFrom(
       this.optionService.getSettingsByDataTypeAndType('SETTING_TABLE_COLUMN')
     );
 
-    console.log(this.selectedFields);
+    // 可視清單，控制該 table column 是否可視
     this.viewCols = this.selectedFields.map((e) => e.value);
 
     // 只保留在 viewCols 中的欄位
@@ -319,7 +324,7 @@ export class SettingComponent implements OnInit, OnDestroy {
       type: 'SETTING_TABLE_COLUMN',
       valueList: selectValues,
     };
-    this.settingService
+    this.customisationService
       .updateCustomizedValue(this.username, request)
       .subscribe({
         next: (res) => {

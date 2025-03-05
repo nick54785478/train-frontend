@@ -5,9 +5,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { BaseResponse } from '../../../shared/models/base-response.model';
 import { UpdateSetting } from '../models/update-setting-request.model';
-import { CustomisationQueriedResource } from '../models/customisation-queried.model';
+import { CustomisationQueriedResource } from '../../../shared/models/customisation-queried.model';
 import { SettingQueriedResource } from '../models/setting-queried-resource.model';
-import { UpdateCustomizedValueResource } from '../models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../../../shared/models/update-customized-value-resource.model copy';
 
 @Injectable({
   providedIn: 'root',
@@ -35,19 +35,6 @@ export class SettingService {
   update(id: number, request: UpdateSetting): Observable<any> {
     const url = this.baseApiUrl + '/settings/' + id;
     return this.http.put(url, request);
-  }
-
-  /**
-   * 更新該使用者的個人設定
-   * @param request
-   * @return Observable<BaseResponse>
-   */
-  updateCustomizedValue(
-    username: string,
-    request: UpdateCustomizedValueResource
-  ): Observable<BaseResponse> {
-    const url = this.baseApiUrl + '/customisation/' + username;
-    return this.http.put<BaseResponse>(url, request);
   }
 
   /**
@@ -79,22 +66,5 @@ export class SettingService {
   delete(id: number): Observable<BaseResponse> {
     const url = this.baseApiUrl + '/settings/' + id;
     return this.http.delete<BaseResponse>(url);
-  }
-
-  /**
-   * 查詢表格個人化配置
-   * @param username
-   * @param type
-   */
-  queryTableColumnCustomisation(
-    username: string,
-    dataType: string,
-    type: string
-  ): Observable<CustomisationQueriedResource> {
-    const url = this.baseApiUrl + '/customisation/' + username;
-    let params = new HttpParams()
-      .set('dataType', dataType ? dataType : '')
-      .set('type', type ? type : '');
-    return this.http.get<CustomisationQueriedResource>(url, { params });
   }
 }

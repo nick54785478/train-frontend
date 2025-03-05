@@ -103,6 +103,50 @@
   </p-panel>
 </form>
 
+<button
+  type="button"
+  icon="pi pi-filter"
+  class="p-button-outlined p-button-primary"
+  pButton
+  (click)="menu.toggle($event)"
+></button>
+<p-menu #menu [popup]="true">
+  <ng-template pTemplate="start">
+    <p-panel header="Table Columms">
+      <div class="card">
+        <div *ngFor="let field of fields" class="flex items-center">
+          <p-checkbox
+            name="group"
+            [value]="field"
+            [(ngModel)]="selectedFields"
+          />
+          <label [for]="field.label" class="ml-2">
+            {{ getColNameByField(field.label) }}
+          </label>
+        </div>
+      </div>
+    </p-panel>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <!-- <p-panel [showHeader]="false"> -->
+    <div class="flex mb-2 gap-2 mt-2 justify-content-center">
+      <button
+        type="button"
+        pButton
+        label="提交"
+        (click)="submitCustomisation()"
+      ></button>
+      <button
+        class="p-button-secondary p-button-outlined"
+        type="button"
+        pButton
+        (click)="menu.toggle($event); resetFields()"
+        label="取消"
+      ></button>
+    </div>
+    <!-- </p-panel> -->
+  </ng-template>
+</p-menu>
 <div class="card">
   <p-table
     #dt
@@ -111,7 +155,7 @@
     selectionMode="single"
     [resizableColumns]="true"
     [value]="headerTableData"
-    [columns]="headerCols"
+    [columns]="filteredCols"
     [(selection)]="selectedHeaderData"
     [scrollable]="true"
     scrollDirection="both"
@@ -273,7 +317,6 @@
           </div>
         </td>
       </tr>
-      <!-- <button type="button" (click)="show('test')" pButton icon="pi pi-info-circle" label="Show"></button> -->
     </ng-template>
   </p-table>
 </div>

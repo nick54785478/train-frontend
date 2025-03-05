@@ -1,4 +1,4 @@
-import { Option } from '../../../shared/models/option.model';
+import { Option } from './option.model';
 
 export class UpdateCustomizedValueResource {
   username?: string;

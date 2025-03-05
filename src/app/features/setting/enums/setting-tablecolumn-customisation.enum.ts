@@ -1,5 +1,5 @@
 /**
- * Form 表單的動作。
+ * Setting 表格顯示欄位。
  */
 export enum SettingTableColumnCustomisation {
   DATA_TYPE = '配置種類',
