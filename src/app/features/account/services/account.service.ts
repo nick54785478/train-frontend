@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import { MoneyAccountQueriedResource } from '../models/money-account-queried-resource.model';
 import { environment } from '../../../../environments/environment';
 import { BookingQueriedResource } from '../models/booking-queried-resource.model';
+import { BaseResponse } from '../../../shared/models/base-response.model';
+import { DepositMoneyResource } from '../models/deposit-money-resource.model';
+import { MoneyDepositedResource } from '../models/money-deposited-resource.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,5 +36,17 @@ export class AccountService {
   getBooking(username: string): Observable<BookingQueriedResource> {
     const url = this.baseApiUrl + '/booking/' + username;
     return this.http.get<BookingQueriedResource>(url);
+  }
+
+  /**
+   * 儲值
+   *
+   * @param requestData
+   */
+  deposit(
+    requestData: DepositMoneyResource
+  ): Observable<MoneyDepositedResource> {
+    const url = this.baseApiUrl + '/account/deposit';
+    return this.http.post<MoneyDepositedResource>(url, requestData);
   }
 }

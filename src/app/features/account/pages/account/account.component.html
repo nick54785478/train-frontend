@@ -49,6 +49,13 @@
             [readOnly]="true"
             formControlName="balance"
           />
+          <button
+            pButton
+            type="button"
+            class="p-button-primary"
+            icon="pi pi-plus"
+            (click)="openDepositDialog(account.uuid)"
+          ></button>
         </div>
       </div>
       <div class="flex mb-2 gap-2 justify-content-end">

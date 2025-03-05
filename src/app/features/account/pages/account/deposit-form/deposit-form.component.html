@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-  <p-panel header="新增配置資料">
+  <p-panel [showHeader]="false">
     <div class="card" #contentElement></div>
     <div class="grid p-fluid">
       <div class="col-12 md:col-3 lg:col-3">
-        <label>排序</label>
-        <p-inputNumber formControlName="money" [min]="0" [max]="100" />
+        <label class="required">儲值金額</label>
+        <p-inputNumber formControlName="money" [min]="0" [max]="1000" />
       </div>
       <div *ngIf="formControlInvalid('value')">
         <small

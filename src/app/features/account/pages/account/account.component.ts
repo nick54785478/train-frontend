@@ -24,6 +24,7 @@ import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DialogFormComponent } from '../../../../shared/component/dialog-form/dialog-form.component';
 import { TicketRecordComponent } from './ticket-record/ticket-record.component';
+import { DepositFormComponent } from './deposit-form/deposit-form.component';
 
 @Component({
   selector: 'app-account',
@@ -178,6 +179,36 @@ export class AccountComponent extends BaseFormTableCompoent implements OnInit {
     this.selectedData = rowData;
     // 開啟 Dialog
     this.openFormDialog(this.selectedData);
+  }
+
+  /**
+   * 開啟儲值頁面
+   * @returns
+   */
+  openDepositDialog(uuid: string) {
+    this.dialogOpened = true;
+    const ref = this.dialogService.open(DialogFormComponent, {
+      header: '帳號儲值',
+      width: '70%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true,
+      data: uuid,
+      templates: {
+        content: DepositFormComponent,
+      },
+    });
+    // Dialog 關閉後要做的事情
+    ref?.onClose
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((returnData: any) => {
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+        console.log('關閉 Dialog');
+        this.dialogOpened = false;
+      });
+    return ref;
   }
 
   /**
