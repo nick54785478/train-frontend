@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BaseResponse } from '../models/base-response.model';
 import { Observable } from 'rxjs/internal/Observable';
-import { UpdateCustomizedValueResource } from '../models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../models/update-customized-value-resource.model';
 import { CustomisationQueriedResource } from '../models/customisation-queried.model';
 
 @Injectable({

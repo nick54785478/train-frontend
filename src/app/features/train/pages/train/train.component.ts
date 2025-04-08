@@ -21,7 +21,7 @@ import { TrainStopsComponent } from './train-stops/train-stops.component';
 import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
 import { StorageService } from '../../../../core/services/storage.service';
 import { CustomisationService } from '../../../../shared/services/customisation.service';
-import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model';
 import { TrainTableColumnCustomisation } from '../../enums/train-tablecolumn-customisation.enum';
 
 @Component({

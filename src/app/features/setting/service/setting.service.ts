@@ -7,7 +7,7 @@ import { BaseResponse } from '../../../shared/models/base-response.model';
 import { UpdateSetting } from '../models/update-setting-request.model';
 import { CustomisationQueriedResource } from '../../../shared/models/customisation-queried.model';
 import { SettingQueriedResource } from '../models/setting-queried-resource.model';
-import { UpdateCustomizedValueResource } from '../../../shared/models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../../../shared/models/update-customized-value-resource.model';
 
 @Injectable({
   providedIn: 'root',

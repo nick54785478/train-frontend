@@ -25,7 +25,7 @@ import { SystemStorageKey } from '../../../../core/enums/system-storage.enum';
 import { SettingQueriedResource } from '../../models/setting-queried-resource.model';
 import { error } from 'console';
 import { SettingTableColumnCustomisation } from '../../enums/setting-tablecolumn-customisation.enum';
-import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model copy';
+import { UpdateCustomizedValueResource } from '../../../../shared/models/update-customized-value-resource.model';
 import { CustomisationService } from '../../../../shared/services/customisation.service';
 
 @Component({
